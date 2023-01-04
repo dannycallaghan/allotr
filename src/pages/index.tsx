@@ -77,6 +77,7 @@ const AuthShowcase: React.FC = () => {
         onClick={sessionData ? () => signOut() : () => signIn()}
       >
         {sessionData ? "Sign out" : "Sign in"}
+        <pre>{JSON.stringify(sessionData, null, 2)}</pre>
       </button>
     </div>
   );
