@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { api } from '../utils/api';
 import { useRouter } from 'next/router';
+import ModalViewList from '../components/modals/ModalViewList';
 
 interface IFormData {
   title: string;
@@ -27,6 +28,10 @@ const Home: NextPage = () => {
   //   createNewList.mutate({ ...list });
   // };
 
+  // const { data: list, isLoading } = api.list.getListById.useQuery({
+  //   id: '63b6f885d80acff9eb00560c',
+  // });
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (listId) {
@@ -42,8 +47,32 @@ const Home: NextPage = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="my-12 text-lg font-medium">
-        <ul className="flex flex-col justify-center">
+      <main className="text-lg font-medium">
+        <div className="hero">
+          <div className="hero-content text-center">
+            <div className="max-w-md">
+              <h1 className="text-5xl font-bold">Got things to do?</h1>
+              <p className="py-6">
+                Create, detail, prioritise, plan and assign your tasks with
+                ease. Then share your list with anyone - for free.
+              </p>
+              {/* {isLoading && <p>Loading</p>} */}
+              {/* {list && <pre>{JSON.stringify(list, null, 2)}</pre>} */}
+              <div className="mb-44 flex flex-row justify-center gap-4">
+                <button className="btn-primary btn-lg">Create a list</button>
+                <label
+                  htmlFor="modal-view-list"
+                  className="btn-primary btn-lg cursor-pointer leading-like-btn-lg"
+                >
+                  View a list
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ModalViewList />
+
+        {/* <ul className="flex flex-col justify-center">
           <li className="flex justify-center py-8">
             <Link href="/create" className="w-full">
               <button className="w-full rounded-lg bg-cyan-500 py-8 px-24 text-2xl font-medium text-white transition hover:bg-blue-800/20">
@@ -74,7 +103,7 @@ const Home: NextPage = () => {
               </form>
             </div>
           </li>
-        </ul>
+        </ul> */}
       </main>
       {/* <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">

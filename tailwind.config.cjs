@@ -6,7 +6,20 @@ module.exports = {
       fontFamily: {
         poppins: 'Poppins',
       },
+      lineHeight: {
+        'like-btn-lg': '4rem',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
+  daisyui: {
+    styled: true,
+    themes: true,
+    base: true,
+    utils: true,
+    logs: true,
+    rtl: false,
+    prefix: '',
+    darkTheme: 'light',
+  },
 };

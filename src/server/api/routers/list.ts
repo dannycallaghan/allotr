@@ -35,9 +35,33 @@ const ICreateListInput = z.object({
 });
 
 export const listRouter = createTRPCRouter({
+  // * Get all lists - useful for testing
   getAllLists: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany();
   }),
+
+  // * Get a single list by unique identifier
+  getListById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        return await ctx.prisma.list.findUnique({
+          where: {
+            id,
+          },
+        });
+      } catch (error) {
+        console.log(`List not found: ${id}`);
+        return null;
+      }
+    }),
+
+  // * Create a new list
   createList: protectedProcedure
     .input(ICreateListInput)
     .mutation(async ({ ctx, input }) => {
