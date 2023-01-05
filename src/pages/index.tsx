@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -5,8 +6,24 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
 
+interface IFormData {
+  title: string,
+  description: string,
+}
+
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const utils = api.useContext();
+  const createNewList = api.list.createList.useMutation();
+  const [list, setList] = useState<IFormData>({
+    title: "",
+    description: "",
+  });
+  const { data } = api.list.getAllLists.useQuery();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createNewList.mutate({ ...list });
+  };
 
   return (
     <>
@@ -21,33 +38,45 @@ const Home: NextPage = () => {
             Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
           </h1>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Title"
+                value={list.title}
+                onChange={(e) => setList((prevData:IFormData) => ({
+                  ...prevData,
+                  title: e.target.value
+                }))}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                value={list.description}
+                onChange={(e) => setList((prevData:IFormData) => ({
+                  ...prevData,
+                  description: e.target.value
+                }))}
+              />
+              <button type="submit">Create</button>
+            </form>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </p>
+            {!data && (
+              <p className="text-2xl text-white">
+                Loading...
+              </p>
+            )}
+            {data && (
+              <p className="text-2xl text-yellow-800">
+                {data.map(user => (
+                  <span key={user.id}>
+                    <span>{user.name}</span><br />
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col items-center gap-2">
             <AuthShowcase />
           </div>
         </div>
@@ -61,17 +90,8 @@ export default Home;
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
-
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => signOut() : () => signIn()}
