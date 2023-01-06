@@ -7,7 +7,7 @@ const Footer = () => {
           <br />
           Making light work since 2023
         </p>
-        <p>Copyright © 2023 - All right reserved</p>
+        <p>Copyright &copy; 2023 - All rights reserved</p>
       </div>
       <div>
         <div className="grid grid-flow-col gap-4">

@@ -7,9 +7,9 @@ interface IProps {
 const MainLayout = (props: IProps) => {
   const { children, classes, hero = true } = props;
 
-  const heroClass = hero ? 'hero' : '';
+  const heroClass = hero ? 'hero' : 'w-full';
   const heroContentClasses = hero ? 'hero-content text-center' : '';
-  const heroWidthClass = hero ? 'max-w-md' : 'px-6 mx-auto';
+  const heroWidthClass = hero ? 'max-w-md' : 'px-6 mx-auto w-full';
 
   return (
     <main className={`flex h-full text-lg font-medium ${classes}`}>

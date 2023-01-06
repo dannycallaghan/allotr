@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { FiCopy } from 'react-icons/fi';
+import Copy from '../shared/Copy';
 
 interface IProps {
   listId: string;
@@ -11,7 +10,6 @@ interface IProps {
 const ModalListLink = (props: IProps) => {
   const { host, listId } = props;
   const [open, setOpen] = useState(true);
-  const [copied, setCopied] = useState<boolean>(false);
 
   return (
     <>
@@ -41,18 +39,7 @@ const ModalListLink = (props: IProps) => {
               href={`${host}/${listId}`}
               className="truncate underline"
             >{`${host}/${listId}`}</Link>
-            <CopyToClipboard
-              text={`${host}/${listId}`}
-              onCopy={() => setCopied(true)}
-            >
-              {copied ? (
-                <span className="pl-2 text-sm text-accent-focus">Copied!</span>
-              ) : (
-                <button className="pl-2 text-lg text-accent-focus">
-                  <FiCopy />
-                </button>
-              )}
-            </CopyToClipboard>
+            <Copy path={`${host}/${listId}`} />
           </p>
         </div>
       </div>

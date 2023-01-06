@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import MainLayout from '../../components/shared/MainLayout';
 import Alert from '../../components/shared/Alert';
-import type { CreatePostInput } from '../../types/types';
+import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
-import { toast } from 'react-toastify';
 import ModalListLink from '../../components/modals/ModalListLink';
 
-const initialListData: () => CreatePostInput = () => {
+const initialListData: () => CreateListInput = () => {
   return {
     title: '',
     description: '',
@@ -16,7 +15,7 @@ const initialListData: () => CreatePostInput = () => {
 };
 
 const CreatePage: NextPage = () => {
-  const [listData, setListData] = useState<CreatePostInput>(initialListData);
+  const [listData, setListData] = useState<CreateListInput>(initialListData);
   const [listId, setlistId] = useState<string>('');
   const createMutation = api.list.createList.useMutation({
     onSuccess: (data) => {
@@ -56,7 +55,7 @@ const CreatePage: NextPage = () => {
   return (
     <>
       <MainLayout classes="items-start pt-10" hero={false}>
-        <h1 className="text-5xl font-bold">Create Your List</h1>
+        <h1 className="text-5xl font-bold">Create your list</h1>
         <p className="py-6">
           OK, so what do you need to do? Remember, only a list title and a first
           task are required - it&apos;s that easy.
@@ -123,24 +122,30 @@ const CreatePage: NextPage = () => {
               ></textarea>
               <label className="label">
                 <span className="label-text-alt">
-                  No more than 1024 characters please.
+                  No more than 500 characters please.
                 </span>
                 <span
                   className={`label-text-alt ${
-                    listData.description.length > 1024
+                    listData.description.length > 500
                       ? 'text-error'
                       : 'text-success'
                   }`}
                 >
-                  {listData.title.length}/256
+                  {listData.title.length}/500
                 </span>
               </label>
             </div>
             <div className="flex justify-end gap-4">
               <Link href="/">
-                <button className="btn-ghost btn">Cancel</button>
+                <button type="button" className="btn-ghost btn">
+                  Cancel
+                </button>
               </Link>
-              <button className="btn" onClick={handleReset}>
+              <button
+                type="button"
+                className="btn-error btn"
+                onClick={handleReset}
+              >
                 Reset
               </button>
               <button

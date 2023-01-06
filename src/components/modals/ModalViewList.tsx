@@ -102,7 +102,6 @@ const ModalViewList = () => {
           {findingList && <FindList cancel={handleFindList} listId={listId} />}
           {!findingList && (
             <div className="modal-action">
-              63b6f885d80acff9eb00560c
               <Cancel />
               <button
                 className="btn-primary btn"

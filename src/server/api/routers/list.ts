@@ -1,25 +1,9 @@
 import { z } from 'zod';
-import { createListSchema } from '../../../schemas/schemas';
-
+import {
+  createListSchema,
+  updateListDetailsSchema,
+} from '../../../schemas/schemas';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
-
-// export const exampleRouter = createTRPCRouter({
-//   hello: publicProcedure
-//     .input(z.object({ text: z.string() }))
-//     .query(({ input }) => {
-//       return {
-//         greeting: `Hello ${input.text}`,
-//       };
-//     }),
-
-//   getAll: publicProcedure.query(({ ctx }) => {
-//     return ctx.prisma.example.findMany();
-//   }),
-
-//   getSecretMessage: protectedProcedure.query(() => {
-//     return "you can now see this secret message!";
-//   }),
-// });
 
 export const listRouter = createTRPCRouter({
   // * Get all lists - useful for testing
@@ -40,6 +24,9 @@ export const listRouter = createTRPCRouter({
         return await ctx.prisma.list.findUnique({
           where: {
             id,
+          },
+          include: {
+            user: true,
           },
         });
       } catch (error) {
@@ -62,6 +49,40 @@ export const listRouter = createTRPCRouter({
                 id: ctx.session.user.id,
               },
             },
+          },
+        });
+      } catch (error) {
+        console.log('Error', error);
+      }
+    }),
+
+  // * Update an existing list details
+  updateListDetails: protectedProcedure
+    .input(updateListDetailsSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.list.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            title: input.title,
+            description: input.description,
+          },
+        });
+      } catch (error) {
+        console.log('Error', error);
+      }
+    }),
+
+  // * Delete a list
+  deleteList: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.list.delete({
+          where: {
+            id: input.id,
           },
         });
       } catch (error) {

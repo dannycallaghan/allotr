@@ -8,6 +8,7 @@ module.exports = {
       },
       lineHeight: {
         'like-btn-lg': '4rem',
+        'like-btn-sm': '2rem',
       },
     },
   },
