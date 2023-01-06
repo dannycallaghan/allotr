@@ -7,12 +7,18 @@ interface IProps {
   listId: string;
 }
 
+const Cancel = () => {
+  return (
+    <label htmlFor="modal-view-list" className="btn-ghost btn">
+      Forget it
+    </label>
+  );
+};
+
 const Loading = () => {
   return (
     <div className="modal-action">
-      <label htmlFor="modal-view-list" className="btn-ghost btn">
-        Forget it
-      </label>
+      <Cancel />
       <button className="loading btn-primary btn">Find this list</button>
     </div>
   );
@@ -35,7 +41,7 @@ const FindList = (props: IProps) => {
         <div className="alert alert-error shadow-lg">
           <div>
             <span>
-              Sorry, can't find that list.{' '}
+              Sorry, can&apos;t find that list.
               <button onClick={cancel} className="underline">
                 Try again?
               </button>
@@ -43,9 +49,7 @@ const FindList = (props: IProps) => {
           </div>
         </div>
         <div className="modal-action">
-          <label htmlFor="modal-view-list" className="btn-ghost btn">
-            Forget it
-          </label>
+          <Cancel />
           <button className="btn-primary btn" disabled>
             Find this list
           </button>
@@ -98,9 +102,8 @@ const ModalViewList = () => {
           {findingList && <FindList cancel={handleFindList} listId={listId} />}
           {!findingList && (
             <div className="modal-action">
-              <label htmlFor="modal-view-list" className="btn-ghost btn">
-                Forget it
-              </label>
+              63b6f885d80acff9eb00560c
+              <Cancel />
               <button
                 className="btn-primary btn"
                 onClick={handleFindList}

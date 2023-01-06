@@ -14,7 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Layout>
-        <ToastContainer position="top-center" limit={1} />
+        <ToastContainer position="top-right" limit={1} />
         <Component {...pageProps} />
       </Layout>
     </SessionProvider>

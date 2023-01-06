@@ -68,7 +68,9 @@ const Nav = () => {
     // </nav>
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn-ghost btn text-xl normal-case">allotr</a>
+        <Link className="btn-ghost btn text-xl normal-case" href="/">
+          allotr
+        </Link>
       </div>
       <div className="flex-none">
         <button className="btn-ghost btn-square btn">

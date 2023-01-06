@@ -1,5 +1,5 @@
-import { useSession } from 'next-auth/react';
 import { z } from 'zod';
+import { createListSchema } from '../../../schemas/schemas';
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 
@@ -20,19 +20,6 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 //     return "you can now see this secret message!";
 //   }),
 // });
-
-const ICreateListInput = z.object({
-  title: z
-    .string()
-    .min(10, { message: 'Must be 10 or more characters.' })
-    .max(256, { message: 'Maximum length is 256 characters.' })
-    .trim(),
-  description: z
-    .string()
-    .min(10, { message: 'Must be 10 or more characters.' })
-    .max(1024, { message: 'Maximum length is 1024 characters.' })
-    .trim(),
-});
 
 export const listRouter = createTRPCRouter({
   // * Get all lists - useful for testing
@@ -63,7 +50,7 @@ export const listRouter = createTRPCRouter({
 
   // * Create a new list
   createList: protectedProcedure
-    .input(ICreateListInput)
+    .input(createListSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         return await ctx.prisma.list.create({
