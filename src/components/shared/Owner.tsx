@@ -21,7 +21,7 @@ const Owner = (props: IProps) => {
       )}
       <div className="flex flex-col justify-start pl-2">
         {sub && <p className="py-0 text-sm text-gray-400">{sub}:</p>}
-        <p className="py-0">{user.name}</p>
+        <p className="py-0 leading-6">{user.name}</p>
       </div>
     </div>
   );

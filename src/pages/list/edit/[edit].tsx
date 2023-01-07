@@ -6,7 +6,7 @@ import Alert from '../../../components/shared/Alert';
 import type { UpdateListDetailsInput } from '../../../types/types';
 import Link from 'next/link';
 import { api } from '../../../utils/api';
-import ModalListLink from '../../../components/modals/ModalListLink';
+import ModalListCreated from '../../../components/modals/ModalListCreated';
 import { useRouter } from 'next/router';
 
 const initialListData: () => UpdateListDetailsInput = () => {
@@ -30,6 +30,7 @@ const EditPage: NextPage = () => {
     onError: (error: unknown) => {
       console.error('Could not edit list:', error);
     },
+    onSuccess: () => router.push(`${host}/${listId}`),
   });
   const [host, setHost] = useState<string>('');
 
@@ -213,7 +214,7 @@ const EditPage: NextPage = () => {
           </div>
         </MainLayout>
         {editMutation.isSuccess && (
-          <ModalListLink listId={listId as string} host={host} />
+          <ModalListCreated listId={listId as string} host={host} />
         )}
       </>
     );

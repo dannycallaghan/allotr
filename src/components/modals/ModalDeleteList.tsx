@@ -12,7 +12,7 @@ const ModalDeleteList = (props: IProps) => {
   const router = useRouter();
   const deleteMutation = api.list.deleteList.useMutation({
     onError: (error: unknown) => {
-      console.error('Could not edit list:', error);
+      console.error('Could not delete list:', error);
     },
   });
 

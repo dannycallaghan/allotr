@@ -5,7 +5,7 @@ import Alert from '../../components/shared/Alert';
 import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
-import ModalListLink from '../../components/modals/ModalListLink';
+import ModalListCreated from '../../components/modals/ModalListCreated';
 
 const initialListData: () => CreateListInput = () => {
   return {
@@ -57,8 +57,8 @@ const CreatePage: NextPage = () => {
       <MainLayout classes="items-start pt-10" hero={false}>
         <h1 className="text-5xl font-bold">Create your list</h1>
         <p className="py-6">
-          OK, so what do you need to do? Remember, only a list title and a first
-          task are required - it&apos;s that easy.
+          OK, so what do you need to do? Remember, at this point, all we need is
+          a title - it&apos;s that easy.
         </p>
         {createMutation.isError && (
           <Alert type="error">
@@ -161,7 +161,7 @@ const CreatePage: NextPage = () => {
         </div>
       </MainLayout>
       {createMutation.isSuccess && (
-        <ModalListLink listId={listId} host={host} />
+        <ModalListCreated listId={listId} host={host} />
       )}
     </>
   );

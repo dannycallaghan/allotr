@@ -8,6 +8,7 @@ import { api } from '../utils/api';
 import Owner from '../components/shared/Owner';
 import { formatAsFriendlyDate } from '../utils/utils';
 import Copy from '../components/shared/Copy';
+import TasksList from '../components/tasks/TasksList';
 
 const List = () => {
   const router = useRouter();
@@ -52,9 +53,17 @@ const List = () => {
           <h1 className="overflow-hidden text-ellipsis pb-6 text-5xl font-bold">
             {data.title}
           </h1>
-          <ListControls listId={data.id} listOwner={data.user.id} />
-          <div className="rounded-lg p-10 shadow-lg">
-            <div className="flex flex-row flex-wrap pb-6">
+          <ListControls
+            listId={data.id}
+            listOwner={data.user.id}
+            path={currentPath}
+          />
+          <div className="mb-6 rounded-lg p-10 shadow-lg">
+            <div
+              className={`flex flex-row flex-wrap ${
+                !!data.description.length ? 'pb-6' : ''
+              }`}
+            >
               <div className="order-1 flex w-full flex-col md:order-1 md:basis-3/5">
                 <Owner sub="List owner" user={data.user} />
               </div>
@@ -80,9 +89,11 @@ const List = () => {
                 </p>
               </div>
             </div>
-            <p className="rounded-md bg-base-200 p-4">{data.description}</p>
+            {!!data.description.length && (
+              <p className="rounded-md bg-base-200 p-4">{data.description}</p>
+            )}
           </div>
-          {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+          <TasksList listId={data.id} tasks={data.tasks} />
         </MainLayout>
       )}
     </>
