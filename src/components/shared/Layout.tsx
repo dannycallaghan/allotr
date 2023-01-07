@@ -11,7 +11,7 @@ const Layout = (props: IProps) => {
     <div className="container mx-auto flex h-screen flex-col justify-between px-16 font-poppins">
       <Nav />
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

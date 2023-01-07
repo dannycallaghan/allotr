@@ -13,33 +13,15 @@ interface IProps {
 }
 
 const TaskControls = (props: IProps) => {
-  const {
-    setOpen,
-    data,
-    remove,
-    toggleStatus,
-    display = ['edit', 'delete', 'status'],
-    completed,
-  } = props;
+  const { setOpen, data, remove } = props;
   return (
-    <div>
-      {display.includes('edit') && (
-        <button onClick={setOpen} className="btn-primary btn-sm btn">
-          <span className="pr-2 text-lg"></span>
-          Edit task
-        </button>
-      )}
-      {display.includes('delete') && (
-        <DeleteTaskButton data={data} remove={remove} />
-      )}
-      {display.includes('status') && (
-        <ToggleTaskStatus
-          data={data}
-          toggleStatus={toggleStatus}
-          completed={completed}
-        />
-      )}
-    </div>
+    <>
+      <button onClick={setOpen} className="btn-primary btn-sm btn">
+        <span className="pr-2 text-lg"></span>
+        Edit task
+      </button>
+      <DeleteTaskButton data={data} remove={remove} />
+    </>
   );
 };
 

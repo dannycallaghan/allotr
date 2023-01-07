@@ -4,6 +4,7 @@ import { FiPlusSquare } from 'react-icons/fi';
 import ModalTask from '../modals/ModalTask';
 import TaskItem from './TaskItem';
 import { compareTime } from '../../utils/utils';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   tasks: Task[];
@@ -15,6 +16,9 @@ const TasksList = (props: IProps) => {
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const [allTasks, setAllTasks] = useState<Task[]>(tasks);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { data: sessionData } = useSession();
+
+  console.log(sessionData);
 
   const handleCreate = (task: Task) => {
     if (!compareTime(task.createdAt, task.updatedAt)) {
@@ -28,7 +32,17 @@ const TasksList = (props: IProps) => {
       });
       return;
     }
-    setAllTasks((prev) => [...prev, task]);
+    const newTask = {
+      ...task,
+      user: {
+        name: sessionData?.user?.name as string,
+        email: '',
+        image: '',
+        id: '',
+        emailVerified: '',
+      },
+    };
+    setAllTasks((prev) => [...prev, newTask]);
   };
 
   const handleDelete = (id: string) => {
