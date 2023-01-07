@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { api } from '../../utils/api';
+import Alert from '../shared/Alert';
 
 interface IProps {
   listId: string;
@@ -12,9 +13,6 @@ const ModalDeleteList = (props: IProps) => {
   const deleteMutation = api.list.deleteList.useMutation({
     onError: (error: unknown) => {
       console.error('Could not edit list:', error);
-    },
-    onSuccess: (error: unknown) => {
-      console.error('Yes! deleted');
     },
   });
 
@@ -44,11 +42,22 @@ const ModalDeleteList = (props: IProps) => {
             anyone who you have shared this list with will also lose it. Are you
             certain?
           </p>
+          {deleteMutation.isError && (
+            <Alert type="error">
+              Well, this embarrassing. I&apos;m afraid something has gone wrong.
+              It&apos;s us, not you. Try again in a minute?
+            </Alert>
+          )}
           <div className="modal-action">
             <label className="btn" htmlFor="modal-delete-list">
               No, forget it
             </label>
-            <button className="btn-error btn" onClick={handleDelete}>
+            <button
+              className={`btn-error btn ${
+                deleteMutation.isLoading ? 'loading' : ''
+              }`}
+              onClick={handleDelete}
+            >
               Yes, delete it!
             </button>
           </div>
