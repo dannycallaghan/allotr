@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Task } from '../../types/types';
 import { formatAsFriendlyDate } from '../../utils/utils';
-import TaskControls from './TaskControls';
+// import TaskControls from './TaskControls';
 import ToggleTaskStatus from './ToggleTaskStatus';
 import { HiDotsVertical } from 'react-icons/hi';
 
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const TaskItem = (props: IProps) => {
-  const { data, setOpen, remove } = props;
+  const { data } = props;
   const [completed, setCompleted] = useState<boolean>(data.isComplete);
 
   const handleToggleStatus = (state: boolean) => {

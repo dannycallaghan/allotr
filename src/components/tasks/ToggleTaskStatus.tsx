@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import type { Task } from '../../types/types';

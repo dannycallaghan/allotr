@@ -1,7 +1,5 @@
-import { FiEdit } from 'react-icons/fi';
 import type { Task } from '../../types/types';
 import DeleteTaskButton from './DeleteTaskButton';
-import ToggleTaskStatus from './ToggleTaskStatus';
 
 interface IProps {
   setOpen: () => void;

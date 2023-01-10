@@ -1,4 +1,4 @@
-import { User } from '../../types/types';
+import type { User } from '../../types/types';
 import Image from 'next/image';
 
 interface IProps {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FiAlertTriangle, FiTrash2 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import { Task } from '../../types/types';
+import type { Task } from '../../types/types';
 import { api } from '../../utils/api';
 
 interface IProps {
