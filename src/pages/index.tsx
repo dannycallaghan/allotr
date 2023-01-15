@@ -31,7 +31,7 @@ const Home: NextPage = () => {
             <button
               className="btn-primary btn-lg"
               onClick={() => {
-                signIn('google', { callbackUrl: '/create' });
+                signIn('google', { callbackUrl: '/list/create' });
               }}
             >
               Create a list
