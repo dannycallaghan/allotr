@@ -33,8 +33,7 @@ export const createTaskSchema = z.object({
     .trim(),
   isComplete: z.boolean().default(false),
   listId: z.string(),
-  dueDate: z.string(),
-  hasDueDate: z.boolean().default(false),
+  dueDate: z.date().nullable(),
 });
 
 export const updateTaskSchema = z.object({
@@ -46,8 +45,7 @@ export const updateTaskSchema = z.object({
     .trim(),
   isComplete: z.boolean().default(false),
   listId: z.string(),
-  dueDate: z.string(),
-  hasDueDate: z.boolean().default(false),
+  dueDate: z.date().nullable(),
 });
 
 // id         String   @id @default(auto()) @map("_id") @db.ObjectId

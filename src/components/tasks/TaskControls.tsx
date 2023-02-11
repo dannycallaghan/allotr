@@ -5,9 +5,9 @@ interface IProps {
   setOpen: () => void;
   data: Task;
   remove: () => void;
-  toggleStatus: (state: boolean) => void;
-  display?: string[];
-  completed: boolean;
+  // toggleStatus: (state: boolean) => void;
+  // display?: string[];
+  // completed: boolean;
 }
 
 const TaskControls = (props: IProps) => {

@@ -9,3 +9,14 @@
 .Toastify__progress-bar--success {
   background-color: hsl(var(--su));
 }
+
+.react-datepicker-wrapper .react-datepicker__close-icon {
+  top: 8px;
+}
+
+.react-datepicker-wrapper .react-datepicker__close-icon::after {
+  font-size: 18px;
+  height: 26px;
+  width: 26px;
+  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+}

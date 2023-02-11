@@ -21,17 +21,6 @@ const TasksList = (props: IProps) => {
   console.log(sessionData);
 
   const handleCreate = (task: Task) => {
-    if (!compareTime(task.createdAt, task.updatedAt)) {
-      setAllTasks((prev) => {
-        return prev.map((item) => {
-          if (item.id === task.id) {
-            return task;
-          }
-          return item;
-        });
-      });
-      return;
-    }
     const newTask = {
       ...task,
       user: {
@@ -42,6 +31,17 @@ const TasksList = (props: IProps) => {
         emailVerified: '',
       },
     };
+    if (!compareTime(task.createdAt, task.updatedAt)) {
+      setAllTasks((prev) => {
+        return prev.map((item) => {
+          if (item.id === task.id) {
+            return newTask;
+          }
+          return item;
+        });
+      });
+      return;
+    }
     setAllTasks((prev) => [...prev, newTask]);
   };
 

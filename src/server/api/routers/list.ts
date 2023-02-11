@@ -106,6 +106,7 @@ export const listRouter = createTRPCRouter({
           data: {
             title: input.title,
             isComplete: input.isComplete,
+            dueDate: input.dueDate,
             user: {
               connect: {
                 id: ctx.session.user.id,
@@ -135,6 +136,17 @@ export const listRouter = createTRPCRouter({
           data: {
             title: input.title,
             isComplete: input.isComplete,
+            dueDate: input.dueDate,
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+            list: {
+              connect: {
+                id: input.listId,
+              },
+            },
           },
         });
       } catch (error) {

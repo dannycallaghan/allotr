@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Task, CreateTaskInput } from '../../types/types';
 import { api } from '../../utils/api';
-import { getTomorrow } from '../../utils/utils';
 import Alert from '../shared/Alert';
-import Datepicker from 'react-tailwindcss-datepicker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { addDays } from 'date-fns';
 
 interface IProps {
   action: (task: Task) => void;
@@ -14,11 +15,6 @@ interface IProps {
   task?: Task | null;
 }
 
-interface IDateObj {
-  startDate: string;
-  endDate: string;
-}
-
 const ModalTask = (props: IProps) => {
   const { action, listId, isOpen, setOpen, task } = props;
   const initialTaskData: () => CreateTaskInput = () => {
@@ -26,16 +22,10 @@ const ModalTask = (props: IProps) => {
       title: '',
       isComplete: false,
       listId,
-      dueDate: getTomorrow(),
-      hasDueDate: false,
+      dueDate: null,
     };
   };
   const [taskData, setTaskData] = useState<CreateTaskInput>(initialTaskData);
-
-  const [dueDateValue, setDueDateValue] = useState<IDateObj>({
-    startDate: '',
-    endDate: '',
-  });
 
   const createMutation = api.list.createTask.useMutation({
     onSuccess: (data: unknown) => {
@@ -73,21 +63,39 @@ const ModalTask = (props: IProps) => {
     if (task) {
       editMutation.mutate({
         ...taskData,
-        dueDate: dueDateValue.startDate,
         id: task.id,
       });
       return;
     }
-    createMutation.mutate({ ...taskData, dueDate: dueDateValue.startDate });
+    createMutation.mutate({ ...taskData });
   };
 
   const handleValidate = () => {
     return taskData.title.length > 6 && taskData.title.length < 256;
   };
 
-  const handleDueDateChange = (newValue: IDateObj) => {
-    setDueDateValue(newValue);
-  };
+  // eslint-disable-next-line react/display-name
+  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+    return (
+      <div className="form-control w-full pb-6">
+        <label className="label" htmlFor="due-date">
+          <span>
+            Does it have a due date?{' '}
+            <span className="label-text-alt">(optional)</span>
+          </span>
+        </label>
+        <input
+          type="text"
+          placeholder="Click to select date"
+          className="input-bordered input w-full"
+          defaultValue={value}
+          onClick={onClick}
+          ref={ref}
+          id="due-date"
+        />
+      </div>
+    );
+  });
 
   useEffect(() => {
     if (task) {
@@ -96,7 +104,6 @@ const ModalTask = (props: IProps) => {
         isComplete: task.isComplete,
         listId: task.listId,
         dueDate: task.dueDate,
-        hasDueDate: task.hasDueDate,
       }));
     }
   }, [task]);
@@ -162,18 +169,21 @@ const ModalTask = (props: IProps) => {
                   {taskData.title.length}/256
                 </span>
               </label>
-              <Datepicker
-                value={dueDateValue}
-                primaryColor={'sky'}
-                asSingle={true}
-                onChange={handleDueDateChange}
-                useRange={false}
-                displayFormat={'DD/MM/YYYY'}
-                readOnly={true}
-                minDate={new Date()}
-                startWeekOn="mon"
-                showFooter={true}
-                inputClassName="font-normal bg-green-100 dark:bg-green-900 dark:placeholder:text-green-100"
+
+              <DatePicker
+                selected={taskData.dueDate}
+                minDate={addDays(new Date(), 1)}
+                onChange={(date: Date | null) =>
+                  setTaskData((prev) => ({
+                    ...prev,
+                    dueDate: date,
+                  }))
+                }
+                isClearable
+                customInput={<ExampleCustomInput />}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Click to select a date"
+                calendarStartDay={1}
               />
             </div>
             <div className="modal-action">
