@@ -26,6 +26,8 @@ export type Task = {
   listId: string;
   user: User;
   authorId: string;
+  dueDate: string;
+  hasDueDate: boolean;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

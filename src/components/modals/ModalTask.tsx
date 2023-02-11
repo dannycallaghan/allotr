@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Task, CreateTaskInput } from '../../types/types';
 import { api } from '../../utils/api';
+import { getTomorrow } from '../../utils/utils';
 import Alert from '../shared/Alert';
+import Datepicker from 'react-tailwindcss-datepicker';
 
 interface IProps {
   action: (task: Task) => void;
@@ -12,6 +14,11 @@ interface IProps {
   task?: Task | null;
 }
 
+interface IDateObj {
+  startDate: string;
+  endDate: string;
+}
+
 const ModalTask = (props: IProps) => {
   const { action, listId, isOpen, setOpen, task } = props;
   const initialTaskData: () => CreateTaskInput = () => {
@@ -19,9 +26,16 @@ const ModalTask = (props: IProps) => {
       title: '',
       isComplete: false,
       listId,
+      dueDate: getTomorrow(),
+      hasDueDate: false,
     };
   };
   const [taskData, setTaskData] = useState<CreateTaskInput>(initialTaskData);
+
+  const [dueDateValue, setDueDateValue] = useState<IDateObj>({
+    startDate: '',
+    endDate: '',
+  });
 
   const createMutation = api.list.createTask.useMutation({
     onSuccess: (data: unknown) => {
@@ -59,15 +73,20 @@ const ModalTask = (props: IProps) => {
     if (task) {
       editMutation.mutate({
         ...taskData,
+        dueDate: dueDateValue.startDate,
         id: task.id,
       });
       return;
     }
-    createMutation.mutate({ ...taskData });
+    createMutation.mutate({ ...taskData, dueDate: dueDateValue.startDate });
   };
 
   const handleValidate = () => {
     return taskData.title.length > 6 && taskData.title.length < 256;
+  };
+
+  const handleDueDateChange = (newValue: IDateObj) => {
+    setDueDateValue(newValue);
   };
 
   useEffect(() => {
@@ -76,6 +95,8 @@ const ModalTask = (props: IProps) => {
         title: task.title,
         isComplete: task.isComplete,
         listId: task.listId,
+        dueDate: task.dueDate,
+        hasDueDate: task.hasDueDate,
       }));
     }
   }, [task]);
@@ -141,6 +162,19 @@ const ModalTask = (props: IProps) => {
                   {taskData.title.length}/256
                 </span>
               </label>
+              <Datepicker
+                value={dueDateValue}
+                primaryColor={'sky'}
+                asSingle={true}
+                onChange={handleDueDateChange}
+                useRange={false}
+                displayFormat={'DD/MM/YYYY'}
+                readOnly={true}
+                minDate={new Date()}
+                startWeekOn="mon"
+                showFooter={true}
+                inputClassName="font-normal bg-green-100 dark:bg-green-900 dark:placeholder:text-green-100"
+              />
             </div>
             <div className="modal-action">
               <button

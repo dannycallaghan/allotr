@@ -83,4 +83,6 @@ model Task {
   listId     String
   user       User     @relation(fields: [authorId], references: [id])
   authorId   String
+  dueDate    String
+  hasDueDate Boolean
 }
