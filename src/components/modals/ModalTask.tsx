@@ -23,6 +23,7 @@ const ModalTask = (props: IProps) => {
       isComplete: false,
       listId,
       dueDate: null,
+      description: '',
     };
   };
   const [taskData, setTaskData] = useState<CreateTaskInput>(initialTaskData);
@@ -75,10 +76,10 @@ const ModalTask = (props: IProps) => {
   };
 
   // eslint-disable-next-line react/display-name
-  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => {
+  const DatepickerCustomInput = forwardRef(({ value, onClick }, ref) => {
     return (
       <div className="form-control w-full pb-6">
-        <label className="label" htmlFor="due-date">
+        <label className="label" htmlFor="task-due-date">
           <span>
             Does it have a due date?{' '}
             <span className="label-text-alt">(optional)</span>
@@ -91,7 +92,7 @@ const ModalTask = (props: IProps) => {
           defaultValue={value}
           onClick={onClick}
           ref={ref}
-          id="due-date"
+          id="task-due-date"
         />
       </div>
     );
@@ -104,6 +105,7 @@ const ModalTask = (props: IProps) => {
         isComplete: task.isComplete,
         listId: task.listId,
         dueDate: task.dueDate,
+        description: task.description,
       }));
     }
   }, [task]);
@@ -136,13 +138,14 @@ const ModalTask = (props: IProps) => {
             </Alert>
           )}
           <form onSubmit={handleSubmit} noValidate>
-            <div className="form-control w-full pb-6">
-              <label className="label" htmlFor="list-title">
+            <div className="form-control w-full pb-2">
+              <label className="label" htmlFor="task-title">
                 <span>Give your task a descriptive title</span>
               </label>
-              <textarea
-                placeholder="e.g. Design flyers"
-                className="textarea-bordered textarea w-full"
+              <input
+                type="text"
+                placeholder="e.g. Design the flyers"
+                className="input-bordered input w-full"
                 value={taskData.title}
                 onChange={(e) =>
                   setTaskData((prev) => ({
@@ -153,8 +156,8 @@ const ModalTask = (props: IProps) => {
                 required
                 minLength={6}
                 maxLength={256}
-                id="list-title"
-              ></textarea>
+                id="task-title"
+              />
               <label className="label">
                 <span className="label-text-alt">
                   Keep this to between 6 and 256 characters.
@@ -169,7 +172,46 @@ const ModalTask = (props: IProps) => {
                   {taskData.title.length}/256
                 </span>
               </label>
-
+            </div>
+            <div className="form-control w-full pb-6">
+              <label className="label" htmlFor="task-description">
+                <span>
+                  Feel the need to add more detail?{' '}
+                  <span className="label-text-alt">(optional)</span>
+                </span>
+              </label>
+              <textarea
+                placeholder="e.g. The flyers should contain the following..."
+                className="textarea-bordered textarea w-full"
+                value={taskData.description}
+                onChange={(e) =>
+                  setTaskData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                required
+                minLength={6}
+                maxLength={256}
+                id="task-description"
+              ></textarea>
+              <label className="label">
+                <span className="label-text-alt">
+                  Keep this to between 6 and 256 characters.
+                </span>
+                <span
+                  className={`label-text-alt ${
+                    taskData.description.length < 6 ||
+                    taskData.description.length > 256
+                      ? 'text-error'
+                      : 'text-success'
+                  }`}
+                >
+                  {taskData.description.length}/256
+                </span>
+              </label>
+            </div>
+            <div className="form-control w-full pb-2">
               <DatePicker
                 selected={taskData.dueDate}
                 minDate={addDays(new Date(), 1)}
@@ -180,7 +222,7 @@ const ModalTask = (props: IProps) => {
                   }))
                 }
                 isClearable
-                customInput={<ExampleCustomInput />}
+                customInput={<DatepickerCustomInput />}
                 dateFormat="dd/MM/yyyy"
                 placeholderText="Click to select a date"
                 calendarStartDay={1}
