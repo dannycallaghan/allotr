@@ -108,6 +108,8 @@ export const listRouter = createTRPCRouter({
             isComplete: input.isComplete,
             dueDate: input.dueDate,
             description: input.description,
+            assignee: input.assignee,
+            comment: input.comment,
             user: {
               connect: {
                 id: ctx.session.user.id,
@@ -139,6 +141,8 @@ export const listRouter = createTRPCRouter({
             isComplete: input.isComplete,
             dueDate: input.dueDate,
             description: input.description,
+            assignee: input.assignee,
+            comment: input.comment,
             user: {
               connect: {
                 id: ctx.session.user.id,

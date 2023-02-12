@@ -38,6 +38,14 @@ export const createTaskSchema = z.object({
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
+  assignee: z
+    .string()
+    .max(256, { message: 'Maximum length is 256 characters.' })
+    .trim(),
+  comment: z
+    .string()
+    .max(1024, { message: 'Maximum length is 1024 characters.' })
+    .trim(),
 });
 
 export const updateTaskSchema = z.object({
@@ -51,6 +59,14 @@ export const updateTaskSchema = z.object({
   listId: z.string(),
   dueDate: z.date().nullable(),
   description: z
+    .string()
+    .max(1024, { message: 'Maximum length is 1024 characters.' })
+    .trim(),
+  assignee: z
+    .string()
+    .max(256, { message: 'Maximum length is 256 characters.' })
+    .trim(),
+  comment: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),

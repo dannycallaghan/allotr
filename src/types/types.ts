@@ -28,6 +28,8 @@ export type Task = {
   authorId: string;
   dueDate: null | Date;
   description: string;
+  assignee: string;
+  comment: string;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

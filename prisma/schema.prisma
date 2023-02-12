@@ -85,4 +85,6 @@ model Task {
   authorId    String
   dueDate     DateTime?
   description String?   @db.VarChar(1024)
+  assignee    String?   @db.VarChar(256)
+  comment     String?   @db.VarChar(1024)
 }
