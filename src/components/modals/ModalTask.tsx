@@ -6,6 +6,7 @@ import Alert from '../shared/Alert';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import { CldUploadWidget } from 'next-cloudinary';
 
 interface IProps {
   action: (task: Task) => void;
@@ -259,6 +260,30 @@ const ModalTask = (props: IProps) => {
                   {taskData.assignee}/256
                 </span>
               </label>
+            </div>
+            <div className="form-control w-full pb-2">
+              <CldUploadWidget
+                onUpload={(error: any, result: any, widget: any) => {
+                  console.error(error);
+                  console.info(result);
+                  console.log(widget);
+                }}
+                uploadPreset="io41hln3"
+                options={{
+                  folder: 'please',
+                  // asset_folder: 'help',
+                }}
+              >
+                {({ open: any }) => {
+                  function handleOnClick(e) {
+                    e.preventDefault();
+                    open();
+                  }
+                  return (
+                    <button onClick={handleOnClick}>Upload an Image</button>
+                  );
+                }}
+              </CldUploadWidget>
             </div>
             <div className="form-control w-full pb-2">
               <label className="label" htmlFor="task-comment">

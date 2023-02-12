@@ -89,13 +89,13 @@ const ModalViewList = () => {
               className="input-bordered input w-full"
               id="list-id"
               onChange={(e) => setListId(e.target.value)}
-              minLength={24}
-              maxLength={24}
+              minLength={25}
+              maxLength={25}
               disabled={findingList}
             />
             <label className="label">
               <span className="label-text-alt">
-                This should look like 24 random characters
+                This should look like 25 random characters
               </span>
             </label>
           </div>
