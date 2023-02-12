@@ -9,8 +9,13 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 
 export const listRouter = createTRPCRouter({
   // * Get all lists - useful for testing
-  getAllLists: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findMany();
+  getAllLists: protectedProcedure.query(async () => {
+    try {
+      return ctx.prisma.user.findMany();
+    } catch (error) {
+      console.log('Unable to find any lists');
+      return null;
+    }
   }),
 
   // * Get a single list by unique identifier
@@ -97,6 +102,30 @@ export const listRouter = createTRPCRouter({
       }
     }),
 
+  // * Get a single task by unique identifier
+  getTaskById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        return await ctx.prisma.task.findUnique({
+          where: {
+            id,
+          },
+          include: {
+            user: true,
+          },
+        });
+      } catch (error) {
+        console.log(`Task not found: ${id}`);
+        return null;
+      }
+    }),
+
   // * Create a task
   createTask: protectedProcedure
     .input(createTaskSchema)
@@ -110,6 +139,7 @@ export const listRouter = createTRPCRouter({
             description: input.description,
             assignee: input.assignee,
             comment: input.comment,
+            attachments: input.attachments,
             user: {
               connect: {
                 id: ctx.session.user.id,
@@ -143,6 +173,7 @@ export const listRouter = createTRPCRouter({
             description: input.description,
             assignee: input.assignee,
             comment: input.comment,
+            attachments: input.attachments,
             user: {
               connect: {
                 id: ctx.session.user.id,

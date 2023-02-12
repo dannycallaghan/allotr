@@ -1,23 +1,23 @@
+import Link from 'next/link';
 import type { Task } from '../../types/types';
 import DeleteTaskButton from './DeleteTaskButton';
 
 interface IProps {
-  setOpen: () => void;
   data: Task;
   remove: () => void;
-  // toggleStatus: (state: boolean) => void;
-  // display?: string[];
-  // completed: boolean;
 }
 
 const TaskControls = (props: IProps) => {
-  const { setOpen, data, remove } = props;
+  const { data, remove } = props;
   return (
     <>
-      <button onClick={setOpen} className="btn-primary btn-sm btn">
+      <Link
+        href={`/${data.listId}/${data.id}`}
+        className="btn-primary btn-sm btn"
+      >
         <span className="pr-2 text-lg"></span>
         Edit task
-      </button>
+      </Link>
       <DeleteTaskButton data={data} remove={remove} />
     </>
   );

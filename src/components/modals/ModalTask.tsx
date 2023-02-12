@@ -138,8 +138,8 @@ const ModalTask = (props: IProps) => {
           <p className="py-4">Got a new task, huh? All we need is a title.</p>
           {(createMutation.isError || editMutation.isError) && (
             <Alert type="error">
-              Well, this embarrassing. I&apos;m afraid something has gone wrong.
-              It&apos;s us, not you. Try again in a minute?
+              Well, this is embarrassing. I&apos;m afraid something has gone
+              wrong. It&apos;s us, not you. Try again in a minute?
             </Alert>
           )}
           <form onSubmit={handleSubmit} noValidate>

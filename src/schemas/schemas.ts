@@ -46,6 +46,7 @@ export const createTaskSchema = z.object({
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
+  attachments: z.string().trim(),
 });
 
 export const updateTaskSchema = z.object({
@@ -70,6 +71,7 @@ export const updateTaskSchema = z.object({
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
+  attachments: z.string().trim(),
 });
 
 // id         String   @id @default(auto()) @map("_id") @db.ObjectId

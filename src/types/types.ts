@@ -1,4 +1,4 @@
-import type { z } from 'zod';
+import type { StringValidation, z } from 'zod';
 import type {
   createListSchema,
   updateListDetailsSchema,
@@ -30,6 +30,7 @@ export type Task = {
   description: string;
   assignee: string;
   comment: string;
+  attachments: string;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

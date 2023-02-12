@@ -112,8 +112,8 @@ const EditPage: NextPage = () => {
           <p className="py-6">Remember that we just need a list title, OK?</p>
           {editMutation.isError && (
             <Alert type="error">
-              Well, this embarrassing. I&apos;m afraid something has gone wrong.
-              It&apos;s us, not you. Try again in a minute?
+              Well, this is embarrassing. I&apos;m afraid something has gone
+              wrong. It&apos;s us, not you. Try again in a minute?
             </Alert>
           )}
           <div className="rounded-lg p-10 shadow-lg">

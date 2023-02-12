@@ -43,8 +43,8 @@ const ModalDeleteList = (props: IProps) => {
           </p>
           {deleteMutation.isError && (
             <Alert type="error">
-              Well, this embarrassing. I&apos;m afraid something has gone wrong.
-              It&apos;s us, not you. Try again in a minute?
+              Well, this is embarrassing. I&apos;m afraid something has gone
+              wrong. It&apos;s us, not you. Try again in a minute?
             </Alert>
           )}
           <div className="modal-action">

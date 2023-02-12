@@ -7,12 +7,11 @@ import { HiDotsVertical } from 'react-icons/hi';
 
 interface IProps {
   data: Task;
-  setOpen: (withTask: Task) => void;
   remove: (id: string) => void;
 }
 
 const TaskItem = (props: IProps) => {
-  const { data, setOpen, remove } = props;
+  const { data, remove } = props;
   const [completed, setCompleted] = useState<boolean>(data.isComplete);
 
   const handleToggleStatus = (state: boolean) => {
@@ -58,16 +57,7 @@ const TaskItem = (props: IProps) => {
         </div>
       </div>
 
-      {/* <p className={`${completed ? 'line-through' : ''}`}>{data.title}</p> */}
-      {/* <p>{formatAsFriendlyDate(data.createdAt)}</p>
-      <p>{formatAsFriendlyDate(data.updatedAt)}</p> */}
-
-      <TaskControls
-        data={data}
-        setOpen={() => setOpen(data)}
-        remove={() => remove(data.id)}
-        // isComplete={handleCompleted}
-      />
+      <TaskControls data={data} remove={() => remove(data.id)} />
     </>
   );
 };
