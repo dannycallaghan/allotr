@@ -18,8 +18,6 @@ const TasksList = (props: IProps) => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const { data: sessionData } = useSession();
 
-  console.log(sessionData);
-
   const handleCreate = (task: Task) => {
     const newTask = {
       ...task,

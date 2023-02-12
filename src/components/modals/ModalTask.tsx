@@ -257,7 +257,7 @@ const ModalTask = (props: IProps) => {
                     taskData.title.length > 256 ? 'text-error' : 'text-success'
                   }`}
                 >
-                  {taskData.assignee}/256
+                  {taskData.assignee.length}/256
                 </span>
               </label>
             </div>
@@ -277,6 +277,7 @@ const ModalTask = (props: IProps) => {
                 {({ open: any }) => {
                   function handleOnClick(e) {
                     e.preventDefault();
+                    console.log('clicked');
                     open();
                   }
                   return (

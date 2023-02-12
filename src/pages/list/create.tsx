@@ -6,6 +6,7 @@ import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
 import ModalListCreated from '../../components/modals/ModalListCreated';
+import { CldUploadWidget } from 'next-cloudinary';
 
 const initialListData: () => CreateListInput = () => {
   return {
@@ -66,6 +67,26 @@ const CreatePage: NextPage = () => {
             It&apos;s us, not you. Try again in a minute?
           </Alert>
         )}
+        <CldUploadWidget
+          onUpload={(error, result, widget) => {
+            console.error(error);
+            console.info(result);
+            console.log(widget);
+          }}
+          uploadPreset="io41hln3"
+          options={{
+            folder: 'please',
+            // asset_folder: 'help',
+          }}
+        >
+          {({ open }) => {
+            function handleOnClick(e) {
+              e.preventDefault();
+              open();
+            }
+            return <button onClick={handleOnClick}>Upload an Image</button>;
+          }}
+        </CldUploadWidget>
         <div className="rounded-lg p-10 shadow-lg">
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-control w-full pb-6">
