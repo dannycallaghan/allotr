@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import router, { useRouter } from 'next/router';
 import Attachments, { Image } from '../shared/Attachments';
+import { CldUploadWidget } from 'next-cloudinary';
 
 interface IProps {
   task?: Task | null;
@@ -23,7 +24,7 @@ const TaskForm = (props: IProps) => {
     return {
       title: '',
       isComplete: false,
-      listId,
+      listId: listId as string,
       dueDate: null,
       description: '',
       assignee: '',
@@ -62,10 +63,12 @@ const TaskForm = (props: IProps) => {
   };
 
   const handleUpdateAttachments = (attachments: Image[]) => {
-    console.log(attachments);
+    console.log('handleUpdateAttachments');
+    const updated = [...taskData.attachments, attachments];
+
     setTaskData((prev) => ({
       ...prev,
-      attachments: JSON.stringify(attachments),
+      attachments: JSON.stringify(updated),
     }));
   };
 
@@ -79,6 +82,34 @@ const TaskForm = (props: IProps) => {
       return;
     }
     createMutation.mutate({ ...taskData });
+  };
+
+  const [count, setCount] = useState(0);
+
+  const handleUpload = (error, result, widget) => {
+    console.log(result.info);
+    setCount((prev) => {
+      console.log('1. Count is currently ', prev);
+      const newState = prev + 1;
+      console.log('1. Setting count to ', newState);
+      return newState;
+    });
+    setCount(100);
+    someOtherFunction();
+  };
+
+  const someOtherFunction = () => {
+    console.log('but this gets called');
+    window.setTimeout(
+      () =>
+        setCount((prev) => {
+          console.log('2. Count is currently ', prev);
+          const newState = prev + 1;
+          console.log('2. Setting count to ', newState);
+          return newState;
+        }),
+      3000,
+    );
   };
 
   const handleValidate = () => {
@@ -132,6 +163,8 @@ const TaskForm = (props: IProps) => {
 
   return (
     <>
+      <pre>{JSON.stringify(count, null, 2)}</pre>
+      <button onClick={() => setCount((prev) => prev + 1)}>click</button>
       <p className="py-4">Got a new task, huh? All we need is a title.</p>
       {(createMutation.isError || editMutation.isError) && (
         <Alert type="error">
@@ -259,10 +292,27 @@ const TaskForm = (props: IProps) => {
           </label>
         </div>
         <div className="form-control w-full pb-2">
-          <Attachments
+          {/* <Attachments
             attachments={taskData.attachments}
             update={handleUpdateAttachments}
-          />
+          ></Attachments> */}
+          <CldUploadWidget onUpload={handleUpload} uploadPreset="io41hln3">
+            {(foo) => {
+              function handleOnClick(e) {
+                e.preventDefault();
+                console.log(foo);
+                foo.open();
+              }
+              return (
+                <button
+                  onClick={handleOnClick}
+                  className="btn-accent btn-sm btn mb-6"
+                >
+                  Click to add one or more attachments
+                </button>
+              );
+            }}
+          </CldUploadWidget>
         </div>
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-comment">

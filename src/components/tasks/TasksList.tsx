@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Task } from '../../types/types';
 import { FiPlusSquare } from 'react-icons/fi';
 import TaskItem from './TaskItem';
+import router from 'next/router';
 
 interface IProps {
   tasks: Task[];
@@ -23,6 +24,10 @@ const TasksList = (props: IProps) => {
     });
   };
 
+  const handleNewTask = () => {
+    router.replace(`/${listId}/task`).then(() => router.reload());
+  };
+
   useEffect(() => {
     setAllTasks(tasks);
   }, [tasks]);
@@ -34,12 +39,12 @@ const TasksList = (props: IProps) => {
           Showing {allTasks.length} tasks
         </div>
         <div className="flex w-full justify-end">
-          <Link href={`/${listId}/task`} className="btn-primary btn">
+          <button onClick={handleNewTask} className="btn-primary btn">
             <span className="pr-2 text-lg">
               <FiPlusSquare />
             </span>
             Add new task
-          </Link>
+          </button>
         </div>
       </div>
       <div className="pb-6">

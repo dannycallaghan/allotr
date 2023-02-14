@@ -6,6 +6,7 @@ import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
 import ModalListCreated from '../../components/modals/ModalListCreated';
+import Script from 'next/script';
 
 const initialListData: () => CreateListInput = () => {
   return {
@@ -52,8 +53,20 @@ const CreatePage: NextPage = () => {
     }
   }, [setHost]);
 
+  function handleOnUpload(error, result, widget) {
+    if (error) {
+      updateError(error);
+      widget.close({
+        quiet: true,
+      });
+      return;
+    }
+    updateUrl(result?.info?.secure_url);
+  }
+
   return (
     <>
+      <Script src="https://widget.cloudinary.com/v2.0/global/all.js"></Script>
       <MainLayout classes="items-start pt-10" hero={false}>
         <h1 className="text-5xl font-bold">Create your list</h1>
         <p className="py-6">
