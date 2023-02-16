@@ -31,6 +31,7 @@ export type Task = {
   assignee: string;
   comment: string;
   attachments: string;
+  claimed: boolean;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

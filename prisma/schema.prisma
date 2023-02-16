@@ -88,4 +88,5 @@ model Task {
   assignee    String?   @db.VarChar(256)
   comment     String?   @db.VarChar(1024)
   attachments String?   @db.Text
+  claimed     Boolean   @default(false)
 }

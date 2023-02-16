@@ -6,20 +6,21 @@ import Alert from '../shared/Alert';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import router, { useRouter } from 'next/router';
-import Attachments, { Image } from '../shared/Attachments';
-import { CldUploadWidget } from 'next-cloudinary';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   task?: Task | null;
+  children: React.ReactNode;
 }
 
 const TaskForm = (props: IProps) => {
   const router = useRouter();
   const routeData = router.query;
   const listId = routeData.list || '1';
+  const { data: sessionData } = useSession();
 
-  const { task } = props;
+  const { task, children } = props;
   const initialTaskData: () => CreateTaskInput = () => {
     return {
       title: '',
@@ -30,6 +31,7 @@ const TaskForm = (props: IProps) => {
       assignee: '',
       comment: '',
       attachments: '',
+      claimed: false,
     };
   };
   const [taskData, setTaskData] = useState<CreateTaskInput>(initialTaskData);
@@ -62,16 +64,6 @@ const TaskForm = (props: IProps) => {
     router.push(`/${listId}`);
   };
 
-  const handleUpdateAttachments = (attachments: Image[]) => {
-    console.log('handleUpdateAttachments');
-    const updated = [...taskData.attachments, attachments];
-
-    setTaskData((prev) => ({
-      ...prev,
-      attachments: JSON.stringify(updated),
-    }));
-  };
-
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (task) {
@@ -82,34 +74,6 @@ const TaskForm = (props: IProps) => {
       return;
     }
     createMutation.mutate({ ...taskData });
-  };
-
-  const [count, setCount] = useState(0);
-
-  const handleUpload = (error, result, widget) => {
-    console.log(result.info);
-    setCount((prev) => {
-      console.log('1. Count is currently ', prev);
-      const newState = prev + 1;
-      console.log('1. Setting count to ', newState);
-      return newState;
-    });
-    setCount(100);
-    someOtherFunction();
-  };
-
-  const someOtherFunction = () => {
-    console.log('but this gets called');
-    window.setTimeout(
-      () =>
-        setCount((prev) => {
-          console.log('2. Count is currently ', prev);
-          const newState = prev + 1;
-          console.log('2. Setting count to ', newState);
-          return newState;
-        }),
-      3000,
-    );
   };
 
   const handleValidate = () => {
@@ -157,14 +121,14 @@ const TaskForm = (props: IProps) => {
         assignee: task.assignee,
         comment: task.comment,
         attachments: task.attachments,
+        claimed: task.claimed,
       }));
     }
   }, [task]);
 
   return (
     <>
-      <pre>{JSON.stringify(count, null, 2)}</pre>
-      <button onClick={() => setCount((prev) => prev + 1)}>click</button>
+      {children}
       <p className="py-4">Got a new task, huh? All we need is a title.</p>
       {(createMutation.isError || editMutation.isError) && (
         <Alert type="error">
@@ -261,14 +225,57 @@ const TaskForm = (props: IProps) => {
           />
         </div>
         <div className="form-control w-full pb-2">
+          <div className="form-control">
+            <label className="label cursor-pointer" htmlFor="task-claimed">
+              <span>
+                Think you can do this? Claim this task{' '}
+                <span className="label-text-alt">(optional)</span>
+              </span>
+              <input
+                type="checkbox"
+                className="toggle-success toggle"
+                checked={taskData.claimed}
+                id="task-claimed"
+                onChange={() => {
+                  setTaskData((prev) => {
+                    const {
+                      user: { name, email },
+                    } = sessionData;
+                    const newData = {
+                      ...prev,
+                      claimed: !taskData.claimed,
+                    };
+                    if (newData.claimed) {
+                      if (name) {
+                        newData.assignee = name;
+                      } else if (email) {
+                        newData.assignee = email;
+                      }
+                    } else {
+                      if (
+                        taskData.assignee === name ||
+                        taskData.assignee === email
+                      ) {
+                        newData.assignee = '';
+                      }
+                    }
+                    return newData;
+                  });
+                }}
+              />
+            </label>
+          </div>
+        </div>
+        <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-assignee">
-            <span>Assign this task to someone?</span>
+            <span>Assign this task to someone else?</span>
           </label>
           <input
             type="text"
             placeholder="e.g. John Smith"
             className="input-bordered input w-full"
             value={taskData.assignee}
+            disabled={taskData.claimed}
             onChange={(e) =>
               setTaskData((prev) => ({
                 ...prev,
@@ -291,29 +298,12 @@ const TaskForm = (props: IProps) => {
             </span>
           </label>
         </div>
-        <div className="form-control w-full pb-2">
-          {/* <Attachments
+        {/* <div className="form-control w-full pb-2">
+          <Attachments
             attachments={taskData.attachments}
             update={handleUpdateAttachments}
-          ></Attachments> */}
-          <CldUploadWidget onUpload={handleUpload} uploadPreset="io41hln3">
-            {(foo) => {
-              function handleOnClick(e) {
-                e.preventDefault();
-                console.log(foo);
-                foo.open();
-              }
-              return (
-                <button
-                  onClick={handleOnClick}
-                  className="btn-accent btn-sm btn mb-6"
-                >
-                  Click to add one or more attachments
-                </button>
-              );
-            }}
-          </CldUploadWidget>
-        </div>
+          ></Attachments>
+        </div> */}
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-comment">
             <span>

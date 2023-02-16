@@ -140,6 +140,7 @@ export const listRouter = createTRPCRouter({
             assignee: input.assignee,
             comment: input.comment,
             attachments: input.attachments,
+            claimed: input.claimed,
             user: {
               connect: {
                 id: ctx.session.user.id,
@@ -174,6 +175,7 @@ export const listRouter = createTRPCRouter({
             assignee: input.assignee,
             comment: input.comment,
             attachments: input.attachments,
+            claimed: input.claimed,
             user: {
               connect: {
                 id: ctx.session.user.id,

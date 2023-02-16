@@ -39,8 +39,9 @@ const Task = () => {
       )}
       {!isLoading && data && (
         <MainLayout classes="items-start pt-10" hero={false}>
-          <h1 className="text-5xl font-bold">Edit task</h1>
-          <TaskForm listId={listId as string} task={data} />
+          <TaskForm listId={listId as string} task={data}>
+            <h1 className="text-5xl font-bold">Edit task</h1>
+          </TaskForm>
         </MainLayout>
       )}
     </>
