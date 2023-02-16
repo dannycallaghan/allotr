@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { api } from '../../../utils/api';
 import ModalListCreated from '../../../components/modals/ModalListCreated';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
 
 const initialListData: () => UpdateListDetailsInput = () => {
   return {
@@ -222,5 +223,27 @@ const EditPage: NextPage = () => {
 
   return null;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default EditPage;

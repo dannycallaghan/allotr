@@ -1,27 +1,13 @@
 import type { NextPage } from 'next';
 import { getSession } from 'next-auth/react';
-import MainLayout from '../../components/shared/MainLayout';
-import TaskForm from '../../components/tasks/TaskForm';
-import type { Session } from 'next-auth';
 
-interface IProps {
-  session: Session;
-}
-
-const CreateTask: NextPage<IProps> = ({ session }) => {
-  console.log(session);
+const Dashboard: NextPage = () => {
   return (
-    <MainLayout classes="items-start pt-10" hero={false}>
-      <TaskForm>
-        <h1 className="overflow-hidden text-ellipsis pb-6 text-5xl font-bold">
-          Add task
-        </h1>
-      </TaskForm>
-    </MainLayout>
+    <>
+      <h1>Dashboard</h1>
+    </>
   );
 };
-
-export default CreateTask;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getServerSideProps(context: any) {
@@ -39,8 +25,10 @@ export async function getServerSideProps(context: any) {
       },
     };
   }
-  console.log(session);
+
   return {
     props: { session },
   };
 }
+
+export default Dashboard;

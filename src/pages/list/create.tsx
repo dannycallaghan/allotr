@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { api } from '../../utils/api';
 import ModalListCreated from '../../components/modals/ModalListCreated';
 import Script from 'next/script';
+import { getSession } from 'next-auth/react';
 
 const initialListData: () => CreateListInput = () => {
   return {
@@ -52,17 +53,6 @@ const CreatePage: NextPage = () => {
       );
     }
   }, [setHost]);
-
-  function handleOnUpload(error, result, widget) {
-    if (error) {
-      updateError(error);
-      widget.close({
-        quiet: true,
-      });
-      return;
-    }
-    updateUrl(result?.info?.secure_url);
-  }
 
   return (
     <>
@@ -179,5 +169,27 @@ const CreatePage: NextPage = () => {
     </>
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default CreatePage;
