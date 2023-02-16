@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import type { Task } from '../../types/types';
@@ -11,6 +12,7 @@ interface IProps {
 
 const ToggleTaskStatus = (props: IProps) => {
   const { data, toggleStatus, completed } = props;
+  const { data: sessionData } = useSession();
 
   const editMutation = api.list.updateTask.useMutation({
     onSuccess: () => {
@@ -23,7 +25,18 @@ const ToggleTaskStatus = (props: IProps) => {
     },
   });
 
+  const canToggleStatus = () => {
+    return (
+      sessionData &&
+      (sessionData?.user?.id === data.user.id ||
+        sessionData?.user?.id === data.assignee)
+    );
+  };
+
   const handleToggleStatus = () => {
+    if (!canToggleStatus()) {
+      return;
+    }
     editMutation.mutate({
       ...data,
       isComplete: !data.isComplete,
@@ -34,10 +47,20 @@ const ToggleTaskStatus = (props: IProps) => {
     <>
       <label
         onClick={handleToggleStatus}
-        className={`swap swap-flip ${completed ? 'swap-active' : ''}`}
+        className={`swap swap-flip ${completed ? 'swap-active' : ''} ${
+          canToggleStatus() ? 'cursor-pointer' : 'cursor-not-allowed'
+        }`}
       >
-        <FaRegCheckSquare className="swap-on h-8 w-8 fill-current" />
-        <FaRegSquare className="swap-off h-8 w-8 fill-current" />
+        <FaRegCheckSquare
+          className={`swap-on h-8 w-8 ${
+            canToggleStatus() ? 'fill-current' : 'fill-gray-300'
+          }`}
+        />
+        <FaRegSquare
+          className={`swap-off h-8 w-8 ${
+            canToggleStatus() ? 'fill-current' : 'fill-gray-300'
+          }`}
+        />
       </label>
     </>
   );

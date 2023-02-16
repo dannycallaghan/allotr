@@ -4,12 +4,7 @@ import MainLayout from '../../components/shared/MainLayout';
 import TaskForm from '../../components/tasks/TaskForm';
 import type { Session } from 'next-auth';
 
-interface IProps {
-  session: Session;
-}
-
-const CreateTask: NextPage<IProps> = ({ session }) => {
-  console.log(session);
+const CreateTask: NextPage = () => {
   return (
     <MainLayout classes="items-start pt-10" hero={false}>
       <TaskForm>

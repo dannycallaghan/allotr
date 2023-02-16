@@ -3,6 +3,7 @@ import { FiAlertTriangle, FiTrash2 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import type { Task } from '../../types/types';
 import { api } from '../../utils/api';
+import AuthAction from '../shared/AuthAction';
 
 interface IProps {
   data: Task;
@@ -60,17 +61,18 @@ const DeleteTaskButton = (props: IProps) => {
   }, [deleteCount]);
 
   return (
-    <button
+    <AuthAction
+      type="button"
+      href={`/${data.listId}/${data.id}`}
+      match={[data.assignee, data.authorId]}
       onClick={handleRemove}
-      className={`btn-sm btn ${
-        deleteCount === 0 ? 'btn-error' : 'btn-warning'
-      }`}
+      classes={`btn-sm btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
     >
       <span className="pr-2 text-lg">
         {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}
       </span>
       {deleteCount === 0 ? 'Delete task' : 'Sure? Click again'}
-    </button>
+    </AuthAction>
   );
 };
 

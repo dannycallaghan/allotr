@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Task } from '../../types/types';
 import DeleteTaskButton from './DeleteTaskButton';
+import AuthAction from '../shared/AuthAction';
 
 interface IProps {
   data: Task;
@@ -11,13 +12,15 @@ const TaskControls = (props: IProps) => {
   const { data, remove } = props;
   return (
     <>
-      <Link
+      <AuthAction
+        type="link"
         href={`/${data.listId}/${data.id}`}
-        className="btn-primary btn-sm btn"
+        match={[data.assignee, data.authorId]}
+        classes="btn-primary btn-sm btn"
       >
         <span className="pr-2 text-lg"></span>
         Edit task
-      </Link>
+      </AuthAction>
       <DeleteTaskButton data={data} remove={remove} />
     </>
   );
