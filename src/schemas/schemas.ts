@@ -25,6 +25,14 @@ export const updateListDetailsSchema = z.object({
     .trim(),
 });
 
+const userSchema = {
+  id: z.string().nullable(),
+  name: z.string().nullable(),
+  email: z.string().nullable(),
+  emailVerified: z.string().nullable(),
+  image: z.string().nullable(),
+};
+
 export const createTaskSchema = z.object({
   title: z
     .string()
@@ -38,16 +46,18 @@ export const createTaskSchema = z.object({
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
-  assignee: z
-    .string()
-    .max(256, { message: 'Maximum length is 256 characters.' })
-    .trim(),
   comment: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
   attachments: z.string().trim(),
+  suggestedAssignee: z
+    .string()
+    .max(256, { message: 'Maximum length is 256 characters.' })
+    .trim(),
   claimed: z.boolean().default(false),
+  assignee: z.object(userSchema).nullable(),
+  user: z.object(userSchema).nullable(),
 });
 
 export const updateTaskSchema = z.object({
@@ -64,15 +74,15 @@ export const updateTaskSchema = z.object({
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
-  assignee: z
-    .string()
-    .max(256, { message: 'Maximum length is 256 characters.' })
-    .trim(),
   comment: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
     .trim(),
   attachments: z.string().trim(),
+  suggestedAssignee: z
+    .string()
+    .max(256, { message: 'Maximum length is 256 characters.' })
+    .trim(),
   claimed: z.boolean().default(false),
 });
 

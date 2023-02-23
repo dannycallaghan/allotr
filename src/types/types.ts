@@ -24,14 +24,15 @@ export type Task = {
   updatedAt: string | Date;
   isComplete: boolean;
   listId: string;
-  user: User;
+  user: User | null;
   authorId: string;
   dueDate: null | Date;
   description: string;
-  assignee: string;
   comment: string;
   attachments: string;
+  suggestedAssignee: string;
   claimed: boolean;
+  assignee: User | null;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

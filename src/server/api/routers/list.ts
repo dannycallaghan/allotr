@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { z } from 'zod';
 import {
   createListSchema,
@@ -37,6 +38,7 @@ export const listRouter = createTRPCRouter({
             tasks: {
               include: {
                 user: true,
+                assignee: true,
               },
             },
           },
@@ -118,6 +120,7 @@ export const listRouter = createTRPCRouter({
           },
           include: {
             user: true,
+            assignee: true,
           },
         });
       } catch (error) {
@@ -131,27 +134,36 @@ export const listRouter = createTRPCRouter({
     .input(createTaskSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        return await ctx.prisma.task.create({
-          data: {
-            title: input.title,
-            isComplete: input.isComplete,
-            dueDate: input.dueDate,
-            description: input.description,
-            assignee: input.assignee,
-            comment: input.comment,
-            attachments: input.attachments,
-            claimed: input.claimed,
-            user: {
-              connect: {
-                id: ctx.session.user.id,
-              },
-            },
-            list: {
-              connect: {
-                id: input.listId,
-              },
+        const data = {
+          title: input.title,
+          isComplete: input.isComplete,
+          dueDate: input.dueDate,
+          description: input.description,
+          comment: input.comment,
+          attachments: input.attachments,
+          suggestedAssignee: input.suggestedAssignee,
+          claimed: input.claimed,
+          user: {
+            connect: {
+              id: ctx.session.user.id,
             },
           },
+          list: {
+            connect: {
+              id: input.listId,
+            },
+          },
+        };
+        if (data.claimed) {
+          // @ts-ignore
+          data.assignee = {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          };
+        }
+        return await ctx.prisma.task.create({
+          data,
         });
       } catch (error) {
         console.log('Error', error);
@@ -163,30 +175,39 @@ export const listRouter = createTRPCRouter({
     .input(updateTaskSchema)
     .mutation(async ({ ctx, input }) => {
       try {
+        const data = {
+          title: input.title,
+          isComplete: input.isComplete,
+          dueDate: input.dueDate,
+          description: input.description,
+          comment: input.comment,
+          attachments: input.attachments,
+          suggestedAssignee: input.suggestedAssignee,
+          claimed: input.claimed,
+          list: {
+            connect: {
+              id: input.listId,
+            },
+          },
+          assignee: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        };
+        if (data.claimed) {
+          // @ts-ignore
+          data.assignee = {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          };
+        }
         return await ctx.prisma.task.update({
           where: {
             id: input.id,
           },
-          data: {
-            title: input.title,
-            isComplete: input.isComplete,
-            dueDate: input.dueDate,
-            description: input.description,
-            assignee: input.assignee,
-            comment: input.comment,
-            attachments: input.attachments,
-            claimed: input.claimed,
-            user: {
-              connect: {
-                id: ctx.session.user.id,
-              },
-            },
-            list: {
-              connect: {
-                id: input.listId,
-              },
-            },
-          },
+          data,
         });
       } catch (error) {
         console.log('Error', error);

@@ -20,6 +20,7 @@ const TaskItem = (props: IProps) => {
 
   return (
     <>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
       <div
         key={data.id}
         className={`mb-2 rounded-lg p-4 shadow-lg ${

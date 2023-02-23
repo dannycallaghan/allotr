@@ -32,6 +32,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -40,6 +41,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -51,7 +54,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   List          List[]
-  Task          Task[]
+  CreatedTasks  Task[]    @relation("author")
+  AssignedTasks Task[]    @relation("assignee")
 }
 
 model VerificationToken {
@@ -71,22 +75,30 @@ model List {
   user        User     @relation(fields: [authorId], references: [id])
   authorId    String
   tasks       Task[]
+
+  @@index([authorId])
 }
 
 model Task {
-  id          String    @id @default(cuid()) @map("_id")
-  title       String    @db.VarChar(256)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  isComplete  Boolean
-  list        List      @relation(fields: [listId], references: [id])
-  listId      String
-  user        User      @relation(fields: [authorId], references: [id])
-  authorId    String
-  dueDate     DateTime?
-  description String?   @db.VarChar(1024)
-  assignee    String?   @db.VarChar(256)
-  comment     String?   @db.VarChar(1024)
-  attachments String?   @db.Text
-  claimed     Boolean   @default(false)
+  id                String    @id @default(cuid()) @map("_id")
+  title             String    @db.VarChar(256)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  isComplete        Boolean
+  list              List      @relation(fields: [listId], references: [id])
+  listId            String
+  user              User      @relation("author", fields: [authorId], references: [id])
+  authorId          String
+  dueDate           DateTime?
+  description       String?   @db.VarChar(1024)
+  comment           String?   @db.VarChar(1024)
+  attachments       String?   @db.Text
+  assignee          User?     @relation("assignee", fields: [assigneeId], references: [id])
+  assigneeId        String?
+  suggestedAssignee String?   @db.VarChar(256)
+  claimed           Boolean   @default(false)
+
+  @@index([listId])
+  @@index([authorId])
+  @@index([assigneeId])
 }

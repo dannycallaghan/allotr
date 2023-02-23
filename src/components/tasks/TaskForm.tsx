@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { boolean } from 'zod';
 
 interface IProps {
   task?: Task | null;
@@ -19,6 +20,7 @@ const TaskForm = (props: IProps) => {
   const routeData = router.query;
   const listId = routeData.list || '1';
   const { data: sessionData } = useSession();
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
 
   const { task, children } = props;
   const initialTaskData: () => CreateTaskInput = () => {
@@ -28,9 +30,9 @@ const TaskForm = (props: IProps) => {
       listId: listId as string,
       dueDate: null,
       description: '',
-      assignee: '',
       comment: '',
       attachments: '',
+      suggestedAssignee: '',
       claimed: false,
     };
   };
@@ -118,11 +120,14 @@ const TaskForm = (props: IProps) => {
         listId: task.listId,
         dueDate: task.dueDate,
         description: task.description,
-        assignee: task.assignee,
         comment: task.comment,
         attachments: task.attachments,
+        suggestedAssignee: task.suggestedAssignee,
         claimed: task.claimed,
+        assignee: task.assignee,
+        user: task.user,
       }));
+      setMode('edit');
     }
   }, [task]);
 
@@ -136,6 +141,8 @@ const TaskForm = (props: IProps) => {
           It&apos;s us, not you. Try again in a minute?
         </Alert>
       )}
+      <pre>{JSON.stringify(taskData, null, 2)}</pre>
+      <pre>{JSON.stringify(sessionData, null, 2)}</pre>
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-title">
@@ -224,6 +231,34 @@ const TaskForm = (props: IProps) => {
             calendarStartDay={1}
           />
         </div>
+
+        {mode == 'edit' &&
+          taskData.claimed &&
+          taskData?.assignee?.id === taskData?.user?.id && (
+            <div className="form-control w-full pb-2">
+              <div className="form-control">
+                <label className="label cursor-pointer" htmlFor="task-claimed">
+                  <span>
+                    Still want to do this task?{' '}
+                    <span className="label-text-alt">(optional)</span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="toggle-success toggle"
+                    checked={taskData.claimed}
+                    id="task-claimed"
+                    onChange={() =>
+                      setTaskData((prev) => ({
+                        ...prev,
+                        claimed: !taskData.claimed,
+                      }))
+                    }
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+
         <div className="form-control w-full pb-2">
           <div className="form-control">
             <label className="label cursor-pointer" htmlFor="task-claimed">
@@ -236,54 +271,34 @@ const TaskForm = (props: IProps) => {
                 className="toggle-success toggle"
                 checked={taskData.claimed}
                 id="task-claimed"
-                onChange={() => {
-                  setTaskData((prev) => {
-                    const {
-                      user: { name, email },
-                    } = sessionData;
-                    const newData = {
-                      ...prev,
-                      claimed: !taskData.claimed,
-                    };
-                    if (newData.claimed) {
-                      if (name) {
-                        newData.assignee = name;
-                      } else if (email) {
-                        newData.assignee = email;
-                      }
-                    } else {
-                      if (
-                        taskData.assignee === name ||
-                        taskData.assignee === email
-                      ) {
-                        newData.assignee = '';
-                      }
-                    }
-                    return newData;
-                  });
-                }}
+                onChange={() =>
+                  setTaskData((prev) => ({
+                    ...prev,
+                    claimed: !taskData.claimed,
+                  }))
+                }
               />
             </label>
           </div>
         </div>
         <div className="form-control w-full pb-2">
-          <label className="label" htmlFor="task-assignee">
+          <label className="label" htmlFor="task-suggested">
             <span>Assign this task to someone else?</span>
           </label>
           <input
             type="text"
             placeholder="e.g. John Smith"
             className="input-bordered input w-full"
-            value={taskData.assignee}
+            value={taskData.suggestedAssignee}
             disabled={taskData.claimed}
             onChange={(e) =>
               setTaskData((prev) => ({
                 ...prev,
-                assignee: e.target.value,
+                suggestedAssignee: e.target.value,
               }))
             }
             maxLength={256}
-            id="task-assignee"
+            id="task-suggested"
           />
           <label className="label">
             <span className="label-text-alt">
@@ -291,10 +306,12 @@ const TaskForm = (props: IProps) => {
             </span>
             <span
               className={`label-text-alt ${
-                taskData.title.length > 256 ? 'text-error' : 'text-success'
+                taskData.suggestedAssignee.length > 256
+                  ? 'text-error'
+                  : 'text-success'
               }`}
             >
-              {taskData.assignee.length}/256
+              {taskData.suggestedAssignee.length}/256
             </span>
           </label>
         </div>
