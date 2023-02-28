@@ -20,7 +20,9 @@ const DeleteTaskButton = (props: IProps) => {
     },
     onSuccess: () => {
       toast.success('Task forgotten successfully!');
-      remove(data.id);
+      if (data && data.id) {
+        remove(data.id);
+      }
     },
   });
 
