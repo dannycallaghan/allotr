@@ -9,6 +9,7 @@ import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { boolean } from 'zod';
+import Attachments from '../shared/Attachments';
 
 interface IProps {
   task?: Task | null;
@@ -64,6 +65,14 @@ const TaskForm = (props: IProps) => {
 
   const handleQuit = () => {
     router.push(`/${listId}`);
+  };
+
+  const handleUpdateAttachments = (attachments: Image[]) => {
+    console.log(attachments);
+    setTaskData((prev) => ({
+      ...prev,
+      attachments: JSON.stringify(attachments),
+    }));
   };
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -315,12 +324,12 @@ const TaskForm = (props: IProps) => {
             </span>
           </label>
         </div>
-        {/* <div className="form-control w-full pb-2">
+        <div className="form-control w-full pb-2">
           <Attachments
             attachments={taskData.attachments}
             update={handleUpdateAttachments}
           ></Attachments>
-        </div> */}
+        </div>
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-comment">
             <span>
