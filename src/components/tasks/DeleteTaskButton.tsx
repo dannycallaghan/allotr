@@ -33,7 +33,7 @@ const DeleteTaskButton = (props: IProps) => {
   const checkCount = useCallback(
     (count: number) => {
       console.log(`count is now ${count}`);
-      if (deleteCount === 2) {
+      if (deleteCount === 2 && data && data.id) {
         deleteMutation.mutate({ id: data.id });
         setDeleteCount(0);
         return;
@@ -66,7 +66,7 @@ const DeleteTaskButton = (props: IProps) => {
     <AuthAction
       type="button"
       href={`/${data.listId}/${data.id}`}
-      match={[data.assignee, data.authorId]}
+      match={[data?.assignee?.id, data?.authorId]}
       onClick={handleRemove}
       classes={`btn-sm btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
     >
