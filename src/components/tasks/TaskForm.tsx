@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import type { Task, CreateTaskInput } from '../../types/types';
+import type { Task } from '../../types/types';
 import { api } from '../../utils/api';
 import Alert from '../shared/Alert';
 import DatePicker from 'react-datepicker';
