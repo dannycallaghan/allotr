@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { Task } from '../../types/types';
 import DeleteTaskButton from './DeleteTaskButton';
 import AuthAction from '../shared/AuthAction';

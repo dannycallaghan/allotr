@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { FiTrash2, FiEdit, FiShare2 } from 'react-icons/fi';
 import ModalDeleteList from '../modals/ModalDeleteList';
 import ModalShareList from '../modals/ModalShareList';

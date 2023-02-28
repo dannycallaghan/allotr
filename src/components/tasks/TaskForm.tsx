@@ -8,7 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { boolean } from 'zod';
 
 interface IProps {
   task?: Task | null;
@@ -79,7 +78,7 @@ const TaskForm = (props: IProps) => {
   };
 
   const handleValidate = () => {
-    return taskData.title.length > 6 && taskData.title.length < 256;
+    return taskData.title.length >= 6 && taskData.title.length <= 256;
   };
 
   useEffect(() => {

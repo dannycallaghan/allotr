@@ -2,7 +2,6 @@ import type { NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 import MainLayout from '../../components/shared/MainLayout';
 import TaskForm from '../../components/tasks/TaskForm';
-import type { Session } from 'next-auth';
 
 const CreateTask: NextPage = () => {
   return (

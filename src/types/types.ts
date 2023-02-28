@@ -1,4 +1,4 @@
-import type { StringValidation, z } from 'zod';
+import type { z } from 'zod';
 import type {
   createListSchema,
   updateListDetailsSchema,

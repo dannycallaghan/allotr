@@ -189,20 +189,7 @@ export const listRouter = createTRPCRouter({
               id: input.listId,
             },
           },
-          assignee: {
-            connect: {
-              id: ctx.session.user.id,
-            },
-          },
         };
-        if (data.claimed) {
-          // @ts-ignore
-          data.assignee = {
-            connect: {
-              id: ctx.session.user.id,
-            },
-          };
-        }
         return await ctx.prisma.task.update({
           where: {
             id: input.id,

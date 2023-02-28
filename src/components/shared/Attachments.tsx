@@ -1,4 +1,6 @@
-import { useEffect, useState, useCallback } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useState } from 'react';
+// @ts-ignore
 import { CldUploadWidget } from 'next-cloudinary';
 import Alert from './Alert';
 import AttachmentItem from './AttachmentItem';
@@ -23,28 +25,50 @@ interface UploadInfo {
 
 const Attachments = (props: IProps) => {
   const { attachments, update } = props;
+  console.log(typeof attachments, attachments.length);
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({
     error: false,
     images: attachments.length ? JSON.parse(attachments) : [],
     used: false,
   });
 
-  const [done, setDone] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(0);
-
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
-
-  const handleDone = (result: any) => {
-    setDone((prev) => {
-      return !prev;
-    });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleUpload = (result: unknown, widget: unknown) => {
+    setUploadInfo((prev) => ({
+      ...prev,
+      images: [
+        ...prev.images,
+        {
+          // @ts-ignore
+          id: result.info.asset_id,
+          // @ts-ignore
+          secure_url: result.info.secure_url,
+          // @ts-ignore
+          thumbnail_url: result.info.thumbnail_url,
+          // @ts-ignore
+          created_at: result.info.created_at,
+        },
+      ],
+      used: true,
+      error: false,
+    }));
   };
 
-  const handleUpload = (error, result, widget) => {
-    console.log('handleUpload', result.info);
-    update(result.info);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleUploadError = (result: unknown, widget: unknown) => {
+    setUploadInfo((prev) => ({
+      ...prev,
+      used: true,
+      error: true,
+    }));
   };
+
+  useEffect(() => {
+    if (uploadInfo.used) {
+      console.log('called');
+      update(uploadInfo.images);
+    }
+  }, [update, uploadInfo]);
 
   useEffect(() => {
     if (attachments.length) {
@@ -66,60 +90,11 @@ const Attachments = (props: IProps) => {
       <h6 className="label">
         <span>Need to add any attachments?</span>
       </h6>
-      <pre>{JSON.stringify(count, null, 2)}</pre>
-      <pre>{JSON.stringify(done, null, 2)}</pre>
       <pre>{JSON.stringify(uploadInfo, null, 2)}</pre>
       <CldUploadWidget
-        // onUpload={(error, result, widget) => {
-        //   //handleDone(result);
-        //   // setDone(true);
-        //   // if (error) {
-        //   //   setUploadInfo((prev) => ({
-        //   //     ...prev,
-        //   //     used: true,
-        //   //     error: true,
-        //   //   }));
-        //   //   return;
-        //   // }
-        //   setCount((prev) => prev + 1);
-        //   setDone((prev) => !prev);
-        //   console.log(result.info);
-        //   setUploadInfo((prev) => {
-        //     console.log('in setUploadInfo');
-        //     // return {
-        //     //   ...prev,
-        //     //   images: [
-        //     //     ...prev.images,
-        //     //     {
-        //     //       id: result.info.asset_id,
-        //     //       secure_url: result.info.secure_url,
-        //     //       thumbnail_url: result.info.thumbnail_url,
-        //     //       created_at: result.info.created_at,
-        //     //     },
-        //     //   ],
-        //     //   used: true,
-        //     //   error: false,
-        //     // };
-        //     const newState = {
-        //       ...prev,
-        //       images: [
-        //         ...prev.images,
-        //         {
-        //           id: result.info.asset_id,
-        //           secure_url: result.info.secure_url,
-        //           thumbnail_url: result.info.thumbnail_url,
-        //           created_at: result.info.created_at,
-        //         },
-        //       ],
-        //       used: true,
-        //       error: false,
-        //     };
-        //     return { ...newState };
-        //   });
-        //   forceUpdate();
-        // }}
-        onUpload={handleUpload}
         uploadPreset="io41hln3"
+        onUpload={handleUpload}
+        onError={handleUploadError}
       >
         {({ open }) => {
           function handleOnClick(e) {

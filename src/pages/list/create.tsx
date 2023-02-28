@@ -40,7 +40,7 @@ const CreatePage: NextPage = () => {
   };
 
   const handleValidate = () => {
-    return listData.title.length > 10 && listData.title.length < 256;
+    return listData.title.length >= 10 && listData.title.length <= 256;
   };
 
   useEffect(() => {
@@ -134,7 +134,7 @@ const CreatePage: NextPage = () => {
                       : 'text-success'
                   }`}
                 >
-                  {listData.title.length}/500
+                  {listData.description.length}/500
                 </span>
               </label>
             </div>

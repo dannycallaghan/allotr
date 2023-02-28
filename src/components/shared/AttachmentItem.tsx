@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { formatAsFriendlyDate } from '../../utils/utils';
-import { Image } from './Attachments';
+import type { Image } from './Attachments';
 
 interface IProps {
   data: Image;
