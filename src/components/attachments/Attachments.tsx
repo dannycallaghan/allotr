@@ -2,15 +2,17 @@
 import { useEffect, useState } from 'react';
 // @ts-ignore
 import { CldUploadWidget } from 'next-cloudinary';
-import Alert from './Alert';
+import Alert from '../shared/Alert';
 import AttachmentItem from './AttachmentItem';
+import type { Task } from '../../types/types';
 
 interface IProps {
-  attachments: string;
-  update: (attachments: Image[]) => void;
+  attachments: string | undefined;
+  update: (attachments: string) => void;
+  data: Task;
 }
 
-export interface Image {
+export interface File {
   id: string;
   secure_url: string;
   thumbnail_url?: string;
@@ -19,25 +21,27 @@ export interface Image {
 
 interface UploadInfo {
   error: boolean;
-  images: Image[];
+  files: File[];
   used: boolean;
 }
 
 const Attachments = (props: IProps) => {
-  const { attachments, update } = props;
-  console.log(typeof attachments, attachments.length);
+  const { attachments, update, data } = props;
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({
     error: false,
-    images: attachments.length ? JSON.parse(attachments) : [],
+    files: [],
     used: false,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpload = (result: unknown, widget: unknown) => {
+    // @ts-ignore
+    if (result.event !== 'success') return;
+
     setUploadInfo((prev) => ({
       ...prev,
-      images: [
-        ...prev.images,
+      files: [
+        ...prev.files,
         {
           // @ts-ignore
           id: result.info.asset_id,
@@ -56,6 +60,7 @@ const Attachments = (props: IProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadError = (result: unknown, widget: unknown) => {
+    console.log('ERROR CALLED');
     setUploadInfo((prev) => ({
       ...prev,
       used: true,
@@ -63,20 +68,32 @@ const Attachments = (props: IProps) => {
     }));
   };
 
-  useEffect(() => {
-    if (uploadInfo.used) {
-      console.log('called');
-      update(uploadInfo.images);
-    }
-  }, [update, uploadInfo]);
+  const handleRemoveAttachment = (id: string) => {
+    setUploadInfo((prev) => ({
+      ...prev,
+      files: [...prev.files.filter((file) => file.id !== id)],
+      used: true,
+      error: false,
+    }));
+  };
 
   useEffect(() => {
-    if (attachments.length) {
-      setUploadInfo((prev) => ({
-        ...prev,
-        images: JSON.parse(attachments),
-      }));
+    if (uploadInfo.used && uploadInfo.files.length) {
+      update(JSON.stringify(uploadInfo.files));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadInfo.files]);
+
+  useEffect(() => {
+    let files: File[] = [];
+    try {
+      // @ts-ignore
+      files = JSON.parse(attachments);
+    } catch (e) {}
+    setUploadInfo((prev) => ({
+      ...prev,
+      files,
+    }));
   }, [attachments]);
 
   return (
@@ -88,18 +105,17 @@ const Attachments = (props: IProps) => {
         </Alert>
       )}
       <h6 className="label">
-        <span>Need to add any attachments?</span>
+        <span>Add photos, images, documents, that you think are useful</span>
       </h6>
-      <pre>{JSON.stringify(uploadInfo, null, 2)}</pre>
       <CldUploadWidget
         uploadPreset="io41hln3"
         onUpload={handleUpload}
         onError={handleUploadError}
       >
-        {({ open }) => {
-          function handleOnClick(e) {
+        {(args: { open: () => void }) => {
+          function handleOnClick(e: { preventDefault: () => void }) {
             e.preventDefault();
-            open();
+            args.open();
           }
           return (
             <button
@@ -111,15 +127,20 @@ const Attachments = (props: IProps) => {
           );
         }}
       </CldUploadWidget>
-      {!!uploadInfo.images.length && (
-        <div className="rounded-lg bg-gray-200 p-4">
+      {!!uploadInfo.files.length && (
+        <>
           <h5 className="w-full pb-4">Attachments</h5>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {uploadInfo.images.map((image) => (
-              <AttachmentItem data={image} key={image.id} />
+          <div>
+            {uploadInfo.files.map((file) => (
+              <AttachmentItem
+                remove={handleRemoveAttachment}
+                data={data}
+                file={file}
+                key={file.id}
+              />
             ))}
           </div>
-        </div>
+        </>
       )}
     </>
   );

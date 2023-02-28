@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import Attachments from '../attachments/Attachments';
 
 interface IProps {
   task?: Task | null;
@@ -18,11 +18,9 @@ const TaskForm = (props: IProps) => {
   const router = useRouter();
   const routeData = router.query;
   const listId = routeData.list || '1';
-  const { data: sessionData } = useSession();
   const [mode, setMode] = useState<'create' | 'edit'>('create');
-
   const { task, children } = props;
-  const initialTaskData: () => CreateTaskInput = () => {
+  const initialTaskData: () => Task = () => {
     return {
       title: '',
       isComplete: false,
@@ -35,7 +33,7 @@ const TaskForm = (props: IProps) => {
       claimed: false,
     };
   };
-  const [taskData, setTaskData] = useState<CreateTaskInput>(initialTaskData);
+  const [taskData, setTaskData] = useState<Task>(initialTaskData);
 
   const createMutation = api.list.createTask.useMutation({
     onSuccess: () => {
@@ -65,28 +63,30 @@ const TaskForm = (props: IProps) => {
     router.push(`/${listId}`);
   };
 
+  const handleUpdateAttachments = (attachments: string) => {
+    setTaskData((prev) => ({
+      ...prev,
+      attachments,
+    }));
+  };
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (task) {
       editMutation.mutate({
         ...taskData,
-        id: task.id,
+        id: task.id as string,
       });
       return;
     }
-    createMutation.mutate({ ...taskData });
+    createMutation.mutate({
+      ...taskData,
+    });
   };
 
   const handleValidate = () => {
     return taskData.title.length >= 6 && taskData.title.length <= 256;
   };
-
-  useEffect(() => {
-    setTaskData((prev) => ({
-      ...prev,
-      listId: routeData.list as string,
-    }));
-  }, [routeData]);
 
   // eslint-disable-next-line react/display-name
   const DatepickerCustomInput = forwardRef(({ value, onClick }, ref) => {
@@ -110,6 +110,14 @@ const TaskForm = (props: IProps) => {
       </div>
     );
   });
+
+  const isYourTask = () => {
+    return (
+      mode == 'edit' &&
+      taskData.claimed &&
+      taskData?.assignee?.id === taskData?.user?.id
+    );
+  };
 
   useEffect(() => {
     if (task) {
@@ -140,8 +148,6 @@ const TaskForm = (props: IProps) => {
           It&apos;s us, not you. Try again in a minute?
         </Alert>
       )}
-      <pre>{JSON.stringify(taskData, null, 2)}</pre>
-      <pre>{JSON.stringify(sessionData, null, 2)}</pre>
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-title">
@@ -231,130 +237,145 @@ const TaskForm = (props: IProps) => {
           />
         </div>
 
-        {mode == 'edit' &&
-          taskData.claimed &&
-          taskData?.assignee?.id === taskData?.user?.id && (
-            <div className="form-control w-full pb-2">
-              <div className="form-control">
-                <label className="label cursor-pointer" htmlFor="task-claimed">
-                  <span>
-                    Still want to do this task?{' '}
-                    <span className="label-text-alt">(optional)</span>
-                  </span>
-                  <input
-                    type="checkbox"
-                    className="toggle-success toggle"
-                    checked={taskData.claimed}
-                    id="task-claimed"
-                    onChange={() =>
-                      setTaskData((prev) => ({
-                        ...prev,
-                        claimed: !taskData.claimed,
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-            </div>
-          )}
+        {/* Attachments */}
+        <div className="mb-8 rounded-lg bg-yellow-100 px-4 pt-4">
+          <div className="form-control w-full">
+            <Attachments
+              data={taskData}
+              attachments={task?.attachments}
+              update={handleUpdateAttachments}
+            ></Attachments>
+          </div>
+        </div>
 
-        <div className="form-control w-full pb-2">
-          <div className="form-control">
-            <label className="label cursor-pointer" htmlFor="task-claimed">
-              <span>
-                Think you can do this? Claim this task{' '}
-                <span className="label-text-alt">(optional)</span>
+        {/* Assignee */}
+        <div className="mb-2 rounded-lg bg-pink-100 px-4 pt-4">
+          <div className="form-control w-full pb-2">
+            <div className="form-control">
+              <label className="label cursor-pointer" htmlFor="task-claimed">
+                <span>
+                  Think you can do this? Claim this task{' '}
+                  <span className="label-text-alt">(optional)</span>
+                </span>
+                <input
+                  type="checkbox"
+                  className="toggle-success toggle"
+                  checked={taskData.claimed}
+                  id="task-claimed"
+                  onChange={() =>
+                    setTaskData((prev) => ({
+                      ...prev,
+                      claimed: !taskData.claimed,
+                    }))
+                  }
+                />
+              </label>
+            </div>
+          </div>
+          <div className="form-control w-full pb-2">
+            <label className="label" htmlFor="task-suggested">
+              <span>Assign this task to someone else?</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. John Smith"
+              className="input-bordered input w-full"
+              value={taskData.suggestedAssignee}
+              disabled={taskData.claimed}
+              onChange={(e) =>
+                setTaskData((prev) => ({
+                  ...prev,
+                  suggestedAssignee: e.target.value,
+                }))
+              }
+              maxLength={256}
+              id="task-suggested"
+            />
+            <label className="label">
+              <span className="label-text-alt">
+                Assignee&apos;s name or email address.
               </span>
-              <input
-                type="checkbox"
-                className="toggle-success toggle"
-                checked={taskData.claimed}
-                id="task-claimed"
-                onChange={() =>
-                  setTaskData((prev) => ({
-                    ...prev,
-                    claimed: !taskData.claimed,
-                  }))
-                }
-              />
+              <span
+                className={`label-text-alt ${
+                  taskData.suggestedAssignee.length > 256
+                    ? 'text-error'
+                    : 'text-success'
+                }`}
+              >
+                {taskData.suggestedAssignee.length}/256
+              </span>
             </label>
           </div>
         </div>
-        <div className="form-control w-full pb-2">
-          <label className="label" htmlFor="task-suggested">
-            <span>Assign this task to someone else?</span>
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. John Smith"
-            className="input-bordered input w-full"
-            value={taskData.suggestedAssignee}
-            disabled={taskData.claimed}
-            onChange={(e) =>
-              setTaskData((prev) => ({
-                ...prev,
-                suggestedAssignee: e.target.value,
-              }))
-            }
-            maxLength={256}
-            id="task-suggested"
-          />
-          <label className="label">
-            <span className="label-text-alt">
-              Assignee&apos;s name or email address.
-            </span>
-            <span
-              className={`label-text-alt ${
-                taskData.suggestedAssignee.length > 256
-                  ? 'text-error'
-                  : 'text-success'
-              }`}
-            >
-              {taskData.suggestedAssignee.length}/256
-            </span>
-          </label>
-        </div>
-        {/* <div className="form-control w-full pb-2">
-          <Attachments
-            attachments={taskData.attachments}
-            update={handleUpdateAttachments}
-          ></Attachments>
-        </div> */}
-        <div className="form-control w-full pb-2">
-          <label className="label" htmlFor="task-comment">
-            <span>
-              As this is your task, feel free to add any further comments{' '}
-              <span className="label-text-alt">(optional)</span>
-            </span>
-          </label>
-          <textarea
-            placeholder="e.g. Done. The flyers will be available to pick up on Tuesday 9th June"
-            className="textarea-bordered textarea w-full"
-            value={taskData.comment}
-            onChange={(e) =>
-              setTaskData((prev) => ({
-                ...prev,
-                comment: e.target.value,
-              }))
-            }
-            maxLength={1024}
-            id="task-comment"
-          ></textarea>
-          <label className="label">
-            <span className="label-text-alt">
-              No more than 1024 characters.
-            </span>
-            <span
-              className={`label-text-alt ${
-                taskData.description.length > 1024
-                  ? 'text-error'
-                  : 'text-success'
-              }`}
-            >
-              {taskData.comment.length}/1024
-            </span>
-          </label>
-        </div>
+
+        {isYourTask() && (
+          <div className="form-control w-full pb-2">
+            <div className="form-control">
+              <label className="label cursor-pointer" htmlFor="task-claimed">
+                <span>
+                  Still want to do this task?{' '}
+                  <span className="label-text-alt">(optional)</span>
+                </span>
+                <input
+                  type="checkbox"
+                  className="toggle-success toggle"
+                  checked={taskData.claimed}
+                  id="task-claimed"
+                  onChange={() =>
+                    setTaskData((prev) => ({
+                      ...prev,
+                      claimed: !taskData.claimed,
+                    }))
+                  }
+                />
+              </label>
+            </div>
+          </div>
+        )}
+
+        {mode === 'edit' && (
+          <div className="form-control w-full pb-2">
+            <label className="label" htmlFor="task-comment">
+              {isYourTask() ? (
+                <span>
+                  As this is your task, feel free to add any further comments{' '}
+                  <span className="label-text-alt">(optional)</span>
+                </span>
+              ) : (
+                <span>Task comments</span>
+              )}
+            </label>
+            <textarea
+              placeholder="e.g. Done. The flyers will be available to pick up on Tuesday 9th June"
+              className="textarea-bordered textarea w-full"
+              value={taskData.comment}
+              onChange={(e) =>
+                setTaskData((prev) => ({
+                  ...prev,
+                  comment: e.target.value,
+                }))
+              }
+              disabled={!isYourTask()}
+              maxLength={1024}
+              id="task-comment"
+            ></textarea>
+            <label className="label">
+              <span className="label-text-alt">
+                No more than 1024 characters.
+              </span>
+              <span
+                className={`label-text-alt ${
+                  taskData.description.length > 1024
+                    ? 'text-error'
+                    : 'text-success'
+                }`}
+              >
+                {taskData.comment.length}/1024
+              </span>
+            </label>
+          </div>
+        )}
+
         <div className="modal-action">
           <button type="button" onClick={handleQuit} className="btn-ghost btn">
             Forget it

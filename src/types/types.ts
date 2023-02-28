@@ -18,21 +18,21 @@ export type User = {
 export type UpdateListDetailsInput = z.TypeOf<typeof updateListDetailsSchema>;
 
 export type Task = {
-  id: string;
+  id?: string;
   title: string;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
   isComplete: boolean;
   listId: string;
-  user: User | null;
-  authorId: string;
+  user?: User | null;
+  authorId?: string;
   dueDate: null | Date;
   description: string;
   comment: string;
   attachments: string;
   suggestedAssignee: string;
   claimed: boolean;
-  assignee: User | null;
+  assignee?: User | null;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

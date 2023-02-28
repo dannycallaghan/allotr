@@ -8,7 +8,7 @@ interface IProps {
   htmlFor?: string;
   classes: string;
   href?: string;
-  match: string[];
+  match: (string | undefined | null)[];
   onClick?: () => void;
 }
 

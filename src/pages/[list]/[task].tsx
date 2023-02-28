@@ -11,9 +11,14 @@ const Task = () => {
   const routeData = router.query;
   const taskId = routeData.task || '1';
   const listId = routeData.list || '1';
-  const { data, isLoading } = api.list.getTaskById.useQuery({
-    id: taskId as string,
-  });
+  const { data, isLoading } = api.list.getTaskById.useQuery(
+    {
+      id: taskId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   return (
     <>
