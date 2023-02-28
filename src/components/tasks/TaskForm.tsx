@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { forwardRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Task } from '../../types/types';
@@ -90,7 +91,8 @@ const TaskForm = (props: IProps) => {
     return taskData.title.length >= 6 && taskData.title.length <= 256;
   };
 
-  // eslint-disable-next-line react/display-name
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const DatepickerCustomInput = forwardRef(({ value, onClick }, ref) => {
     return (
       <div className="form-control w-full pb-6">
