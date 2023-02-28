@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
 import Attachments from '../attachments/Attachments';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   task?: Task | null;
@@ -16,6 +17,7 @@ interface IProps {
 
 const TaskForm = (props: IProps) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const routeData = router.query;
   const listId = routeData.list || '1';
   const [mode, setMode] = useState<'create' | 'edit'>('create');
@@ -106,18 +108,46 @@ const TaskForm = (props: IProps) => {
           onClick={onClick}
           ref={ref}
           id="task-due-date"
+          disabled={!canAlterTask()}
         />
       </div>
     );
   });
 
-  const isYourTask = () => {
+  const handleClaimTask = (persist = false) => {
+    if (persist && task) {
+      editMutation.mutate({
+        ...taskData,
+        id: task.id as string,
+        claimed: false,
+      });
+      return;
+    }
+    setTaskData((prev) => {
+      const data = { ...prev };
+      if (session && session.user) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        (data.assignee = { ...session.user }), (data.claimed = !data.claimed);
+      }
+      return data;
+    });
+  };
+
+  const canAlterTask = () => {
+    if (mode !== 'edit') return true;
     return (
       mode == 'edit' &&
-      taskData.claimed &&
-      taskData?.assignee?.id === taskData?.user?.id
+      ((taskData.claimed && taskData?.assignee?.id === session?.user?.id) ||
+        taskData?.user?.id === session?.user?.id)
     );
+    return false;
   };
+
+  const isCreator = () => taskData?.user?.id === session?.user?.id;
+
+  const isClaimant = () =>
+    taskData.claimed && taskData?.assignee?.id === session?.user?.id;
 
   useEffect(() => {
     if (task) {
@@ -141,7 +171,97 @@ const TaskForm = (props: IProps) => {
   return (
     <>
       {children}
-      <p className="py-4">Got a new task, huh? All we need is a title.</p>
+      {mode === 'create' ? (
+        <p className="py-4">Got a new task, huh? All we need is a title.</p>
+      ) : (
+        <>
+          {taskData.claimed && canAlterTask() && (
+            <div className="mb-2 mt-4 rounded-lg bg-pink-100 px-4 pt-2">
+              <div className="form-control w-full pb-2">
+                <div className="form-control">
+                  <label
+                    className="label cursor-pointer justify-start"
+                    htmlFor="task-claimed"
+                  >
+                    {isClaimant() && (
+                      <>
+                        <span className="pr-4">
+                          Not for you anymore? Unclaim this task
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="toggle-success toggle"
+                          checked={taskData.claimed}
+                          id="task-claimed"
+                          onChange={() => handleClaimTask(true)}
+                        />
+                      </>
+                    )}
+                    {isCreator() && !isClaimant() && (
+                      <>
+                        <span className="pr-4">
+                          This task is currently claimed by{' '}
+                          <span className="font-bold">
+                            {taskData?.assignee?.name} (
+                            {taskData?.assignee?.email})
+                          </span>
+                          {'. '}
+                          As the task creator, you can remove this claim by
+                          moving the toggle switch to the{' '}
+                          <span className="italic">off</span> position.
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="toggle-success toggle"
+                          checked={taskData.claimed}
+                          id="task-claimed"
+                          onChange={() => handleClaimTask(true)}
+                        />
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+          {!taskData.claimed && (
+            <div className="mb-2 mt-4 rounded-lg bg-pink-100 px-4 pt-2">
+              <div className="form-control w-full pb-2">
+                <div className="form-control">
+                  {!isCreator() && (
+                    <p className="label">
+                      If you want to do more than just view this task, you must
+                      first claim it as your own.
+                    </p>
+                  )}
+                  <label
+                    className="label cursor-pointer justify-start"
+                    htmlFor="task-claimed"
+                  >
+                    <span className="pr-4">
+                      Think this is perfect for you? Claim this task{' '}
+                    </span>
+                    <input
+                      type="checkbox"
+                      className="toggle-success toggle"
+                      checked={taskData.claimed}
+                      id="task-claimed"
+                      onChange={() => handleClaimTask()}
+                    />
+                  </label>
+                  {!isCreator() && (
+                    <p className="label-text-alt label">
+                      Once you claim this task, only you or the creator of this
+                      task will be able to take it away from you.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
       {(createMutation.isError || editMutation.isError) && (
         <Alert type="error">
           Well, this is embarrassing. I&apos;m afraid something has gone wrong.
@@ -149,15 +269,18 @@ const TaskForm = (props: IProps) => {
         </Alert>
       )}
       <form onSubmit={handleSubmit} noValidate>
+        {/* <pre>{JSON.stringify(taskData, null, 2)}</pre>
+        <pre>{JSON.stringify(session, null, 2)}</pre> */}
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-title">
-            <span>Give your task a descriptive title</span>
+            <span>Give the task a descriptive title</span>
           </label>
           <input
             type="text"
             placeholder="e.g. Design the flyers"
             className="input-bordered input w-full"
             value={taskData.title}
+            disabled={!canAlterTask()}
             onChange={(e) =>
               setTaskData((prev) => ({
                 ...prev,
@@ -195,6 +318,7 @@ const TaskForm = (props: IProps) => {
             placeholder="e.g. The flyers should contain the following..."
             className="textarea-bordered textarea w-full"
             value={taskData.description}
+            disabled={!canAlterTask()}
             onChange={(e) =>
               setTaskData((prev) => ({
                 ...prev,
@@ -244,90 +368,62 @@ const TaskForm = (props: IProps) => {
               data={taskData}
               attachments={task?.attachments}
               update={handleUpdateAttachments}
+              disabled={!canAlterTask()}
             ></Attachments>
           </div>
         </div>
 
-        {/* Assignee */}
-        <div className="mb-2 rounded-lg bg-pink-100 px-4 pt-4">
-          <div className="form-control w-full pb-2">
-            <div className="form-control">
-              <label className="label cursor-pointer" htmlFor="task-claimed">
-                <span>
-                  Think you can do this? Claim this task{' '}
-                  <span className="label-text-alt">(optional)</span>
-                </span>
-                <input
-                  type="checkbox"
-                  className="toggle-success toggle"
-                  checked={taskData.claimed}
-                  id="task-claimed"
-                  onChange={() =>
-                    setTaskData((prev) => ({
-                      ...prev,
-                      claimed: !taskData.claimed,
-                    }))
-                  }
-                />
-              </label>
+        {mode === 'create' && (
+          <div className="mb-2 rounded-lg bg-pink-100 px-4 pt-4">
+            <div className="form-control w-full pb-2">
+              <div className="form-control">
+                <label className="label cursor-pointer" htmlFor="task-claimed">
+                  <span>
+                    Think you can do this? Claim this task{' '}
+                    <span className="label-text-alt">(optional)</span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="toggle-success toggle"
+                    checked={taskData.claimed}
+                    id="task-claimed"
+                    onChange={() => handleClaimTask()}
+                  />
+                </label>
+              </div>
             </div>
-          </div>
-          <div className="form-control w-full pb-2">
-            <label className="label" htmlFor="task-suggested">
-              <span>Assign this task to someone else?</span>
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. John Smith"
-              className="input-bordered input w-full"
-              value={taskData.suggestedAssignee}
-              disabled={taskData.claimed}
-              onChange={(e) =>
-                setTaskData((prev) => ({
-                  ...prev,
-                  suggestedAssignee: e.target.value,
-                }))
-              }
-              maxLength={256}
-              id="task-suggested"
-            />
-            <label className="label">
-              <span className="label-text-alt">
-                Assignee&apos;s name or email address.
-              </span>
-              <span
-                className={`label-text-alt ${
-                  taskData.suggestedAssignee.length > 256
-                    ? 'text-error'
-                    : 'text-success'
-                }`}
-              >
-                {taskData.suggestedAssignee.length}/256
-              </span>
-            </label>
-          </div>
-        </div>
-
-        {isYourTask() && (
-          <div className="form-control w-full pb-2">
-            <div className="form-control">
-              <label className="label cursor-pointer" htmlFor="task-claimed">
-                <span>
-                  Still want to do this task?{' '}
-                  <span className="label-text-alt">(optional)</span>
+            <div className="form-control w-full pb-2">
+              <label className="label" htmlFor="task-suggested">
+                <span>Assign this task to someone else?</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. John Smith"
+                className="input-bordered input w-full"
+                value={taskData.suggestedAssignee}
+                disabled={taskData.claimed}
+                onChange={(e) =>
+                  setTaskData((prev) => ({
+                    ...prev,
+                    suggestedAssignee: e.target.value,
+                  }))
+                }
+                maxLength={256}
+                id="task-suggested"
+              />
+              <label className="label">
+                <span className="label-text-alt">
+                  Assignee&apos;s name or email address.
                 </span>
-                <input
-                  type="checkbox"
-                  className="toggle-success toggle"
-                  checked={taskData.claimed}
-                  id="task-claimed"
-                  onChange={() =>
-                    setTaskData((prev) => ({
-                      ...prev,
-                      claimed: !taskData.claimed,
-                    }))
-                  }
-                />
+                <span
+                  className={`label-text-alt ${
+                    taskData.suggestedAssignee.length > 256
+                      ? 'text-error'
+                      : 'text-success'
+                  }`}
+                >
+                  {taskData.suggestedAssignee.length}/256
+                </span>
               </label>
             </div>
           </div>
@@ -336,7 +432,7 @@ const TaskForm = (props: IProps) => {
         {mode === 'edit' && (
           <div className="form-control w-full pb-2">
             <label className="label" htmlFor="task-comment">
-              {isYourTask() ? (
+              {canAlterTask() ? (
                 <span>
                   As this is your task, feel free to add any further comments{' '}
                   <span className="label-text-alt">(optional)</span>
@@ -355,7 +451,7 @@ const TaskForm = (props: IProps) => {
                   comment: e.target.value,
                 }))
               }
-              disabled={!isYourTask()}
+              disabled={!canAlterTask()}
               maxLength={1024}
               id="task-comment"
             ></textarea>
@@ -377,22 +473,42 @@ const TaskForm = (props: IProps) => {
         )}
 
         <div className="modal-action">
-          <button type="button" onClick={handleQuit} className="btn-ghost btn">
-            Forget it
-          </button>
-          <button type="button" className="btn-error btn" onClick={handleReset}>
-            Reset
-          </button>
-          <button
-            className={`btn-primary btn ${
-              createMutation.isLoading || editMutation.isLoading
-                ? 'loading'
-                : ''
-            }`}
-            disabled={!handleValidate()}
-          >
-            {task ? 'Update' : 'Create'}
-          </button>
+          {canAlterTask() ? (
+            <>
+              <button
+                type="button"
+                onClick={handleQuit}
+                className="btn-ghost btn"
+              >
+                Forget it
+              </button>
+              <button
+                type="button"
+                className="btn-error btn"
+                onClick={handleReset}
+              >
+                Reset
+              </button>
+              <button
+                className={`btn-primary btn ${
+                  createMutation.isLoading || editMutation.isLoading
+                    ? 'loading'
+                    : ''
+                }`}
+                disabled={!handleValidate()}
+              >
+                {task ? 'Update' : 'Create'}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={handleQuit}
+              className="btn-ghost btn"
+            >
+              Back to list
+            </button>
+          )}
         </div>
       </form>
     </>

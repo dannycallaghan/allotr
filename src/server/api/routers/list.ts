@@ -190,6 +190,14 @@ export const listRouter = createTRPCRouter({
             },
           },
         };
+        if (data.claimed) {
+          // @ts-ignore
+          data.assignee = {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          };
+        }
         return await ctx.prisma.task.update({
           where: {
             id: input.id,

@@ -4,6 +4,7 @@ import { formatAsFriendlyDate } from '../../utils/utils';
 import TaskControls from './TaskControls';
 import ToggleTaskStatus from './ToggleTaskStatus';
 import { HiDotsVertical } from 'react-icons/hi';
+import Link from 'next/link';
 
 interface IProps {
   data: Task;
@@ -20,7 +21,6 @@ const TaskItem = (props: IProps) => {
 
   return (
     <>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
       <div
         key={data.id}
         className={`mb-2 rounded-lg p-4 shadow-lg ${
@@ -28,13 +28,14 @@ const TaskItem = (props: IProps) => {
         }`}
       >
         <div className="mb-2 flex">
-          <div
-            className={`flex basis-8/12 items-center sm:basis-11/12 ${
+          <Link
+            href={`/${data.listId}/${data.id}`}
+            className={`flex basis-8/12 items-center hover:text-primary sm:basis-11/12 ${
               completed ? 'line-through' : ''
             } ${data.title.length > 100 ? 'line-clamp-2' : ''}`}
           >
             <p className="py-0">{data.title}</p>
-          </div>
+          </Link>
           <div className="flex basis-2/12 items-center justify-end sm:basis-1/12">
             <ToggleTaskStatus
               data={data}

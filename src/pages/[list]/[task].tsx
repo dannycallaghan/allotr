@@ -1,3 +1,4 @@
+import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -6,7 +7,7 @@ import PageSpinner from '../../components/shared/PageSpinner';
 import TaskForm from '../../components/tasks/TaskForm';
 import { api } from '../../utils/api';
 
-const Task = () => {
+const Task = (props: IProps) => {
   const router = useRouter();
   const routeData = router.query;
   const taskId = routeData.task || '1';

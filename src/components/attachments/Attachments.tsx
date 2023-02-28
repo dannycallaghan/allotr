@@ -10,6 +10,7 @@ interface IProps {
   attachments: string | undefined;
   update: (attachments: string) => void;
   data: Task;
+  disabled: boolean;
 }
 
 export interface File {
@@ -26,7 +27,7 @@ interface UploadInfo {
 }
 
 const Attachments = (props: IProps) => {
-  const { attachments, update, data } = props;
+  const { attachments, update, data, disabled } = props;
   const [uploadInfo, setUploadInfo] = useState<UploadInfo>({
     error: false,
     files: [],
@@ -121,6 +122,7 @@ const Attachments = (props: IProps) => {
             <button
               onClick={handleOnClick}
               className="btn-accent btn-sm btn mb-6"
+              disabled={disabled}
             >
               Click to add one or more attachments
             </button>

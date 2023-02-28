@@ -8,10 +8,10 @@ import type {
 export type CreateListInput = z.TypeOf<typeof createListSchema>;
 
 export type User = {
-  id: string;
+  id: string | undefined;
   name: string | null;
   email: string | null;
-  emailVerified: string | null | Date;
+  emailVerified?: string | null | Date;
   image: string | null;
 };
 

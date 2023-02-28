@@ -9,7 +9,7 @@ interface IProps {
   classes: string;
   href?: string;
   match: (string | undefined | null)[];
-  onClick?: () => void;
+  onClick?: (e: { preventDefault: () => void }) => void;
 }
 
 const AuthAction = (props: IProps) => {
