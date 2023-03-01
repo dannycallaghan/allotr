@@ -97,6 +97,7 @@ model Task {
   assigneeId        String?
   suggestedAssignee String?   @db.VarChar(256)
   claimed           Boolean   @default(false)
+  priority          Int       @default(3)
 
   @@index([listId])
   @@index([authorId])

@@ -33,6 +33,7 @@ export type Task = {
   suggestedAssignee: string;
   claimed: boolean;
   assignee?: User | null;
+  priority: number;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

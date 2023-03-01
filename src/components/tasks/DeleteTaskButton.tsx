@@ -39,7 +39,7 @@ const DeleteTaskButton = (props: IProps) => {
         return;
       }
     },
-    [deleteCount, deleteMutation, data.id],
+    [deleteCount, deleteMutation, data],
   );
 
   useEffect(() => {

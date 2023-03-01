@@ -10,6 +10,7 @@ import { addDays } from 'date-fns';
 import { useRouter } from 'next/router';
 import Attachments from '../attachments/Attachments';
 import { useSession } from 'next-auth/react';
+import TaskPriority from './TaskPriority';
 
 interface IProps {
   task?: Task | null;
@@ -34,6 +35,7 @@ const TaskForm = (props: IProps) => {
       attachments: '',
       suggestedAssignee: '',
       claimed: false,
+      priority: 3,
     };
   };
   const [taskData, setTaskData] = useState<Task>(initialTaskData);
@@ -136,6 +138,14 @@ const TaskForm = (props: IProps) => {
     });
   };
 
+  const handleUpdatePriority = (value: number) => {
+    console.log(`Change priority to ${value}`);
+    setTaskData((prev) => ({
+      ...prev,
+      priority: value,
+    }));
+  };
+
   const canAlterTask = () => {
     if (mode !== 'edit') return true;
     return (
@@ -165,6 +175,7 @@ const TaskForm = (props: IProps) => {
         claimed: task.claimed,
         assignee: task.assignee,
         user: task.user,
+        priority: task.priority,
       }));
       setMode('edit');
     }
@@ -308,6 +319,14 @@ const TaskForm = (props: IProps) => {
               {taskData.title.length}/256
             </span>
           </label>
+        </div>
+        <div className="form-control w-full pb-2">
+          <TaskPriority
+            value={taskData.priority}
+            update={handleUpdatePriority}
+            disabled={!canAlterTask()}
+            colors={false}
+          />
         </div>
         <div className="form-control w-full pb-2">
           <label className="label" htmlFor="task-description">

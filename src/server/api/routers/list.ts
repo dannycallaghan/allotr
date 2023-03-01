@@ -143,6 +143,7 @@ export const listRouter = createTRPCRouter({
           attachments: input.attachments,
           suggestedAssignee: input.suggestedAssignee,
           claimed: input.claimed,
+          priority: input.priority,
           user: {
             connect: {
               id: ctx.session.user.id,
@@ -184,6 +185,7 @@ export const listRouter = createTRPCRouter({
           attachments: input.attachments,
           suggestedAssignee: input.suggestedAssignee,
           claimed: input.claimed,
+          priority: input.priority,
           list: {
             connect: {
               id: input.listId,
