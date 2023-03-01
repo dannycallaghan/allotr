@@ -1,59 +1,60 @@
 import { useState, useEffect } from 'react';
 
 interface IProps {
-  update: (value: number) => void;
+  update?: (value: number) => void;
   value: number;
   disabled: boolean;
   labels?: boolean;
   colors: boolean;
+  id: string;
+  size?: string;
 }
 
 const TaskPriority = (props: IProps) => {
-  const { update, value, disabled, labels = true, colors } = props;
+  const {
+    update,
+    value,
+    disabled,
+    labels = true,
+    colors,
+    id,
+    size = '',
+  } = props;
   const [priority, setPriority] = useState<number>(value);
+  const priorityClass = 'bg-red-500';
+  let ratingSize = '';
+
+  if (size && size.length) {
+    ratingSize = `rating-${size}`;
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPriority(Number(e.currentTarget.dataset.index));
   };
 
-  let priorityClass = 'bg-green-700';
-
-  switch (priority) {
-    case 1:
-      priorityClass = 'bg-yellow-400';
-      break;
-    case 2:
-      priorityClass = 'bg-yellow-600';
-      break;
-    case 4:
-      priorityClass = 'bg-red-500';
-      break;
-    case 5:
-      priorityClass = 'bg-red-800';
-      break;
-    default:
-      priorityClass = 'bg-green-700';
-  }
-
   useEffect(() => {
-    update(priority);
+    if (update) {
+      update(priority);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priority]);
 
   return (
     <>
-      <p className="label">
-        <span>How important is this task?</span>
-      </p>
-      <div className="rating">
+      {labels && (
+        <p className="label">
+          <span>How important is this task?</span>
+        </p>
+      )}
+      <div className={`rating ${ratingSize}`}>
         {[1, 2, 3, 4, 5].map((radio) => (
           <input
             key={radio}
             type="radio"
-            name="task-priority"
+            name={`task-priority-${id}`}
             checked={priority === radio}
             data-index={radio}
-            id={`priority-${radio}`}
+            id={`priority-${radio}-${id}`}
             disabled={disabled}
             onChange={handleChange}
             className={`mask mask-star-2 ${priorityClass} ${
@@ -67,11 +68,18 @@ const TaskPriority = (props: IProps) => {
         ))}
         {labels && (
           <div className="pl-2">
+            <p
+              className={
+                priority === 0 ? 'label-text-alt inline-block' : 'hidden'
+              }
+            >
+              No priority
+            </p>
             <label
               className={
                 priority === 1 ? 'label-text-alt inline-block' : 'hidden'
               }
-              htmlFor="priority-1"
+              htmlFor={`priority-1-${id}`}
             >
               Would be nice
             </label>
@@ -79,7 +87,7 @@ const TaskPriority = (props: IProps) => {
               className={
                 priority === 2 ? 'label-text-alt inline-block' : 'hidden'
               }
-              htmlFor="priority-2"
+              htmlFor={`priority-2-${id}`}
             >
               Low priority
             </label>
@@ -87,7 +95,7 @@ const TaskPriority = (props: IProps) => {
               className={
                 priority === 3 ? 'label-text-alt inline-block' : 'hidden'
               }
-              htmlFor="priority-3"
+              htmlFor={`priority-3-${id}`}
             >
               Normal priority
             </label>
@@ -95,7 +103,7 @@ const TaskPriority = (props: IProps) => {
               className={
                 priority === 4 ? 'label-text-alt inline-block' : 'hidden'
               }
-              htmlFor="priority-4"
+              htmlFor={`priority-4-${id}`}
             >
               Medium priority
             </label>
@@ -103,7 +111,7 @@ const TaskPriority = (props: IProps) => {
               className={
                 priority === 5 ? 'label-text-alt inline-block' : 'hidden'
               }
-              htmlFor="priority-5"
+              htmlFor={`priority-5-${id}`}
             >
               High priority
             </label>

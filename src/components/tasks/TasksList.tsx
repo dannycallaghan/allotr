@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Task } from '../../types/types';
 import { FiPlusSquare } from 'react-icons/fi';
 import TaskItem from './TaskItem';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   tasks: Task[];
@@ -12,6 +13,7 @@ interface IProps {
 const TasksList = (props: IProps) => {
   const { tasks, listId } = props;
   const [allTasks, setAllTasks] = useState<Task[]>(tasks);
+  const { data: session } = useSession();
 
   const handleDelete = (id: string) => {
     setAllTasks((prev) => {
@@ -19,6 +21,25 @@ const TasksList = (props: IProps) => {
         if (item.id !== id) {
           return item;
         }
+      });
+    });
+  };
+
+  const handleClaim = (id: string) => {
+    setAllTasks((prev) => {
+      return prev.map((item) => {
+        if (item.id === id) {
+          const data = { ...item };
+          if (session && session.user) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            (data.assignee = { ...session.user }),
+              (data.claimed = !data.claimed);
+          }
+          console.log(data);
+          return data;
+        }
+        return item;
       });
     });
   };
@@ -44,7 +65,12 @@ const TasksList = (props: IProps) => {
       </div>
       <div className="pb-6">
         {allTasks.map((task) => (
-          <TaskItem key={task.id} data={task} remove={handleDelete} />
+          <TaskItem
+            key={task.id}
+            data={task}
+            remove={handleDelete}
+            claim={handleClaim}
+          />
         ))}
       </div>
     </>

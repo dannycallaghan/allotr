@@ -2,12 +2,16 @@ import { add, format } from 'date-fns';
 
 export const FRIENDLY_DATE_FORMAT = 'h:mmaa EEEE do MMMM yyyy';
 
-export function formatAsFriendlyDate(date: Date | string | number) {
+export function formatAsFriendlyDate(
+  date: Date | string | number | undefined,
+  prefix = '',
+) {
+  if (!date) return '';
   let input = date;
   if (typeof input === 'string') {
     input = Number(date);
   }
-  return format(input, FRIENDLY_DATE_FORMAT);
+  return `${prefix}${format(input, FRIENDLY_DATE_FORMAT)}`;
 }
 
 export function capitaliseFirstLetter(str: string) {

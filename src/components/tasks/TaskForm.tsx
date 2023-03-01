@@ -35,7 +35,7 @@ const TaskForm = (props: IProps) => {
       attachments: '',
       suggestedAssignee: '',
       claimed: false,
-      priority: 3,
+      priority: 0,
     };
   };
   const [taskData, setTaskData] = useState<Task>(initialTaskData);
@@ -270,6 +270,42 @@ const TaskForm = (props: IProps) => {
                   )}
                 </div>
               </div>
+              {isCreator() && (
+                <div className="form-control w-full pb-2">
+                  <label className="label" htmlFor="task-suggested">
+                    <span>Or maybe assign this task to someone else?</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. John Smith"
+                    className="input-bordered input w-full"
+                    value={taskData.suggestedAssignee}
+                    disabled={taskData.claimed}
+                    onChange={(e) =>
+                      setTaskData((prev) => ({
+                        ...prev,
+                        suggestedAssignee: e.target.value,
+                      }))
+                    }
+                    maxLength={256}
+                    id="task-suggested"
+                  />
+                  <label className="label">
+                    <span className="label-text-alt">
+                      Assignee&apos;s name or email address.
+                    </span>
+                    <span
+                      className={`label-text-alt ${
+                        taskData.suggestedAssignee.length > 256
+                          ? 'text-error'
+                          : 'text-success'
+                      }`}
+                    >
+                      {taskData.suggestedAssignee.length}/256
+                    </span>
+                  </label>
+                </div>
+              )}
             </div>
           )}
         </>

@@ -63,18 +63,22 @@ const DeleteTaskButton = (props: IProps) => {
   }, [deleteCount]);
 
   return (
-    <AuthAction
-      type="button"
-      href={`/${data.listId}/${data.id}`}
-      match={[data?.assignee?.id, data?.authorId]}
-      onClick={handleRemove}
-      classes={`btn-sm btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
-    >
-      <span className="pr-2 text-lg">
-        {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}
-      </span>
-      {deleteCount === 0 ? 'Delete task' : 'Sure? Click again'}
-    </AuthAction>
+    <>
+      <AuthAction
+        type="button"
+        href={`/${data.listId}/${data.id}`}
+        match={[data?.authorId].concat(
+          data.claimed ? [data?.assignee?.id] : [],
+        )}
+        onClick={handleRemove}
+        classes={`btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
+      >
+        <span className="pr-2 text-lg">
+          {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}
+        </span>
+        {deleteCount === 0 ? 'Delete task' : 'Click again'}
+      </AuthAction>
+    </>
   );
 };
 
