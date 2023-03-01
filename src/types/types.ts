@@ -27,10 +27,10 @@ export type Task = {
   user?: User | null;
   authorId?: string;
   dueDate: null | Date;
-  description: string;
-  comment: string;
-  attachments: string;
-  suggestedAssignee: string;
+  description: string | null;
+  comment: string | null;
+  attachments: string | null;
+  suggestedAssignee: string | null;
   claimed: boolean;
   assignee?: User | null;
   priority: number;
