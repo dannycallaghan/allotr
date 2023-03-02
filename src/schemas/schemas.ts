@@ -37,16 +37,19 @@ export const createTaskSchema = z.object({
   description: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
-    .trim(),
+    .trim()
+    .nullable(),
   comment: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
-    .trim(),
-  attachments: z.string().trim(),
+    .trim()
+    .nullable(),
+  attachments: z.string().trim().nullable(),
   suggestedAssignee: z
     .string()
     .max(256, { message: 'Maximum length is 256 characters.' })
-    .trim(),
+    .trim()
+    .nullable(),
   claimed: z.boolean().default(false),
   priority: z.number().default(3),
 });
@@ -64,16 +67,19 @@ export const updateTaskSchema = z.object({
   description: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
-    .trim(),
+    .trim()
+    .nullable(),
   comment: z
     .string()
     .max(1024, { message: 'Maximum length is 1024 characters.' })
-    .trim(),
-  attachments: z.string().trim(),
+    .trim()
+    .nullable(),
+  attachments: z.string().trim().nullable(),
   suggestedAssignee: z
     .string()
     .max(256, { message: 'Maximum length is 256 characters.' })
-    .trim(),
+    .trim()
+    .nullable(),
   claimed: z.boolean().default(false),
   priority: z.number().default(3),
 });

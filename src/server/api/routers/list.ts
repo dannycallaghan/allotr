@@ -40,6 +40,11 @@ export const listRouter = createTRPCRouter({
                 user: true,
                 assignee: true,
               },
+              orderBy: [
+                {
+                  createdAt: 'desc',
+                },
+              ],
             },
           },
         });

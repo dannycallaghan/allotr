@@ -27,8 +27,8 @@ const TaskItem = (props: IProps) => {
     <>
       <div
         key={data.id}
-        className={`mb-2 rounded-lg border p-4 shadow ${
-          completed ? 'bg-gray-300' : 'hover:bg-gray-100'
+        className={`mb-2 rounded-lg border p-4 shadow hover:bg-gray-100 ${
+          completed ? '' : ''
         }`}
       >
         <div className="mb-2">
@@ -47,8 +47,8 @@ const TaskItem = (props: IProps) => {
           <div className="flex">
             <Link
               href={`/${data.listId}/${data.id}`}
-              className={`flex basis-8/12 items-center hover:font-bold sm:basis-11/12 ${
-                completed ? 'line-through' : 'text-primary'
+              className={`flex basis-8/12 items-center hover:underline sm:basis-11/12 ${
+                completed ? 'line-through' : ''
               } ${data.title.length > 100 ? 'line-clamp-2' : ''}`}
             >
               <p className="py-0">{data.title}</p>
@@ -109,7 +109,7 @@ const TaskItem = (props: IProps) => {
         {!data.claimed && data.suggestedAssignee && (
           <div
             className={`mt-4 flex rounded-md p-2 text-sm ${
-              completed ? 'bg-pink-200' : 'bg-pink-200'
+              completed ? 'bg-green-200' : 'bg-green-200'
             }`}
           >
             <p className="py-0 text-gray-700">

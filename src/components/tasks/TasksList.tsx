@@ -4,14 +4,19 @@ import type { Task } from '../../types/types';
 import { FiPlusSquare } from 'react-icons/fi';
 import TaskItem from './TaskItem';
 import { useSession } from 'next-auth/react';
+import TaskListControls from './TaskListControls';
+import { ListControls } from '../../pages/[list]';
 
 interface IProps {
   tasks: Task[];
   listId: string;
+  listControls: ListControls;
+  handleListChange: (data: ListControls) => void;
+  total: number;
 }
 
 const TasksList = (props: IProps) => {
-  const { tasks, listId } = props;
+  const { tasks, listId, listControls, handleListChange, total } = props;
   const [allTasks, setAllTasks] = useState<Task[]>(tasks);
   const { data: session } = useSession();
 
@@ -51,10 +56,16 @@ const TasksList = (props: IProps) => {
   return (
     <>
       <div className="mb-6 flex items-center">
-        <div className="basis-1/2 text-gray-700">
-          Showing {allTasks.length} tasks
+        <div className="flex flex-grow items-center text-gray-700">
+          <p>
+            Showing {allTasks.length} of {total} task{total == 1 ? '' : 's'}
+          </p>
+          <TaskListControls
+            listControls={listControls}
+            handleValueChange={handleListChange}
+          />
         </div>
-        <div className="flex w-full justify-end">
+        <div className="flex justify-end">
           <Link href={`/${listId}/task`} className="btn-primary btn">
             <span className="pr-2 text-lg">
               <FiPlusSquare />
@@ -65,12 +76,14 @@ const TasksList = (props: IProps) => {
       </div>
       <div className="pb-6">
         {allTasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            data={task}
-            remove={handleDelete}
-            claim={handleClaim}
-          />
+          <>
+            <TaskItem
+              key={task.id}
+              data={task}
+              remove={handleDelete}
+              claim={handleClaim}
+            />
+          </>
         ))}
       </div>
     </>

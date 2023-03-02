@@ -1,29 +1,112 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import MainLayout from '../components/shared/MainLayout';
 import PageSpinner from '../components/shared/PageSpinner';
-import ListControls from '../components/shared/ListControls';
+import ListControls from '../components/lists/ListControls';
 import { api } from '../utils/api';
 import Owner from '../components/shared/Owner';
 import { formatAsFriendlyDate } from '../utils/utils';
 import Copy from '../components/shared/Copy';
 import TasksList from '../components/tasks/TasksList';
+import { Task } from '../types/types';
+import { useSession } from 'next-auth/react';
+import { add, isAfter, isBefore, sub } from 'date-fns';
+
+export interface ListControls {
+  open: boolean;
+  my: boolean;
+  unclaimed: boolean;
+  by: string;
+}
 
 const List = () => {
   const router = useRouter();
   const routeData = router.query;
+  const { data: session } = useSession();
   const listId = routeData.list || '1';
   const { data, isLoading } = api.list.getListById.useQuery({
     id: listId as string,
   });
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentPath, setCurrentPath] = useState<string>('');
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  const [listControls, setListControls] = useState<ListControls>({
+    open: false,
+    my: false,
+    unclaimed: false,
+    by: 'createdAtNewest',
+  });
+
+  const handleListChange = (data: ListControls) => {
+    setListControls((prev) => ({
+      ...prev,
+      ...data,
+    }));
+  };
+
+  const filterAndOrderList = async (unfiltered: Task[]) => {
+    let filtered = unfiltered;
+
+    if (listControls.my) {
+      filtered = filtered.filter((task) => {
+        return task.claimed && task?.assignee?.id === session?.user?.id;
+      });
+    }
+
+    if (listControls.open) {
+      filtered = filtered.filter((task) => !task.isComplete);
+    }
+
+    if (listControls.unclaimed) {
+      filtered = filtered.filter((task) => !task.claimed);
+    }
+
+    switch (listControls.by) {
+      case 'createdAtOldest':
+        filtered = filtered.sort((a, b) =>
+          isBefore(b.createdAt as Date, a.createdAt as Date) ? 1 : -1,
+        );
+        break;
+      case 'priority':
+        console.log('in here');
+        filtered = filtered.sort((a, b) => (b.priority > a.priority ? 1 : -1));
+        break;
+      case 'dueDate':
+        filtered = filtered.sort((a, b) => {
+          const aDate = a.dueDate
+            ? (a.dueDate as Date)
+            : add(data?.createdAt as Date, { years: 100 });
+          const bDate = b.dueDate
+            ? (b.dueDate as Date)
+            : add(data?.createdAt as Date, { years: 100 });
+
+          return isAfter(aDate, bDate) ? 1 : -1;
+        });
+        break;
+      default:
+      // Do nothing
+    }
+
+    setTasks(filtered);
+    forceUpdate();
+  };
 
   useEffect(() => {
     if (data && typeof window !== 'undefined') {
       setCurrentPath(window.location.href);
+      filterAndOrderList(data.tasks);
     }
   }, [data, setCurrentPath]);
+
+  useEffect(() => {
+    if (data && typeof window !== 'undefined') {
+      filterAndOrderList(data.tasks);
+    }
+  }, [listControls]);
 
   return (
     <>
@@ -93,7 +176,13 @@ const List = () => {
               <p className="rounded-md bg-base-200 p-4">{data.description}</p>
             )}
           </div>
-          <TasksList listId={data.id} tasks={data.tasks} />
+          <TasksList
+            listId={data.id}
+            tasks={tasks}
+            listControls={listControls}
+            handleListChange={handleListChange}
+            total={data.tasks.length}
+          />
         </MainLayout>
       )}
     </>

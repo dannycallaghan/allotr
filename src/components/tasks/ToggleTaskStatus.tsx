@@ -28,8 +28,8 @@ const ToggleTaskStatus = (props: IProps) => {
   const canToggleStatus = () => {
     return (
       sessionData &&
-      (sessionData?.user?.id === data.user.id ||
-        sessionData?.user?.id === data.assignee)
+      (sessionData?.user?.id === data?.user?.id ||
+        sessionData?.user?.id === data?.assignee?.id)
     );
   };
 
@@ -39,6 +39,7 @@ const ToggleTaskStatus = (props: IProps) => {
     }
     editMutation.mutate({
       ...data,
+      id: data.id as string,
       isComplete: !data.isComplete,
     });
   };
