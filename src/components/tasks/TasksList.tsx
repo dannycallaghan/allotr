@@ -76,14 +76,9 @@ const TasksList = (props: IProps) => {
       </div>
       <div className="pb-6">
         {allTasks.map((task) => (
-          <>
-            <TaskItem
-              key={task.id}
-              data={task}
-              remove={handleDelete}
-              claim={handleClaim}
-            />
-          </>
+          <div key={task.id}>
+            <TaskItem data={task} remove={handleDelete} claim={handleClaim} />
+          </div>
         ))}
       </div>
     </>

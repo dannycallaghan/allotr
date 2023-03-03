@@ -33,6 +33,7 @@ const List = () => {
   const [currentPath, setCurrentPath] = useState<string>('');
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
+  const [lastUpdated, setLastUpdated] = useState<null | Date>(null);
 
   const [listControls, setListControls] = useState<ListControls>({
     open: false,
@@ -50,6 +51,11 @@ const List = () => {
 
   const filterAndOrderList = async (unfiltered: Task[]) => {
     let filtered = unfiltered;
+
+    if (!lastUpdated) {
+      console.log('Setting last updated');
+      setLastUpdated(unfiltered[0]?.updatedAt as Date);
+    }
 
     if (listControls.my) {
       filtered = filtered.filter((task) => {
@@ -72,7 +78,6 @@ const List = () => {
         );
         break;
       case 'priority':
-        console.log('in here');
         filtered = filtered.sort((a, b) => (b.priority > a.priority ? 1 : -1));
         break;
       case 'dueDate':
@@ -87,8 +92,10 @@ const List = () => {
           return isAfter(aDate, bDate) ? 1 : -1;
         });
         break;
-      default:
-      // Do nothing
+      default: // createdAtOldest
+        filtered = filtered.sort((a, b) =>
+          isBefore(a.createdAt as Date, b.createdAt as Date) ? 1 : -1,
+        );
     }
 
     setTasks(filtered);
@@ -168,7 +175,9 @@ const List = () => {
               <div className="order-4 flex w-full flex-col  md:order-4 md:basis-2/5">
                 <p className="text-sm text-gray-400">Last updated:</p>
                 <p className="flex pb-2 text-sm">
-                  {formatAsFriendlyDate(data.updatedAt)}
+                  {formatAsFriendlyDate(
+                    lastUpdated ? lastUpdated : data.updatedAt,
+                  )}
                 </p>
               </div>
             </div>

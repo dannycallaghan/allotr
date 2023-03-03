@@ -8,6 +8,7 @@ interface IProps {
   colors: boolean;
   id: string;
   size?: string;
+  completed?: boolean;
 }
 
 const TaskPriority = (props: IProps) => {
@@ -19,9 +20,10 @@ const TaskPriority = (props: IProps) => {
     colors,
     id,
     size = '',
+    completed = false,
   } = props;
   const [priority, setPriority] = useState<number>(value);
-  const priorityClass = 'bg-red-500';
+  const priorityClass = completed ? 'bg-gray-400' : 'bg-red-500';
   let ratingSize = '';
 
   if (size && size.length) {

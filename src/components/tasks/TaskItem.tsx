@@ -41,6 +41,7 @@ const TaskItem = (props: IProps) => {
                 labels={false}
                 id={data.id as string}
                 size="sm"
+                completed={completed}
               />
             </div>
           )}
@@ -48,7 +49,7 @@ const TaskItem = (props: IProps) => {
             <Link
               href={`/${data.listId}/${data.id}`}
               className={`flex basis-8/12 items-center hover:underline sm:basis-11/12 ${
-                completed ? 'line-through' : ''
+                completed ? 'text-gray-400 line-through' : ''
               } ${data.title.length > 100 ? 'line-clamp-2' : ''}`}
             >
               <p className="py-0">{data.title}</p>

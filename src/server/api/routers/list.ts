@@ -42,7 +42,7 @@ export const listRouter = createTRPCRouter({
               },
               orderBy: [
                 {
-                  createdAt: 'desc',
+                  updatedAt: 'desc',
                 },
               ],
             },
