@@ -5,7 +5,7 @@ import { FiPlusSquare } from 'react-icons/fi';
 import TaskItem from './TaskItem';
 import { useSession } from 'next-auth/react';
 import TaskListControls from './TaskListControls';
-import { ListControls } from '../../pages/[list]';
+import type { ListControls } from '../../pages/[list]';
 
 interface IProps {
   tasks: Task[];

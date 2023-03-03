@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { ListControls } from '../../pages/[list]';
 import TaskListFilters from './TaskListFilters';
 import TaskListOrder from './TaskListOrder';

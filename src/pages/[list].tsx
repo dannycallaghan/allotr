@@ -10,9 +10,9 @@ import Owner from '../components/shared/Owner';
 import { formatAsFriendlyDate } from '../utils/utils';
 import Copy from '../components/shared/Copy';
 import TasksList from '../components/tasks/TasksList';
-import { Task } from '../types/types';
+import type { Task } from '../types/types';
 import { useSession } from 'next-auth/react';
-import { add, isAfter, isBefore, sub } from 'date-fns';
+import { add, isAfter, isBefore } from 'date-fns';
 
 export interface ListControls {
   open: boolean;
