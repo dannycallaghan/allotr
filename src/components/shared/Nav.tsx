@@ -1,7 +1,10 @@
 import Link from 'next/link';
-// import Image from 'next/image';
+import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import type { Session } from 'next-auth';
+import { GoTriangleDown } from 'react-icons/go';
+import { FiUser } from 'react-icons/fi';
+import { useRouter } from 'next/router';
 
 interface IProps {
   sessionData: Session | null;
@@ -9,63 +12,92 @@ interface IProps {
 
 const AuthControls = (props: IProps) => {
   const { sessionData } = props;
+  const router = useRouter();
+
   return (
     <button
-      className="rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-blue-800/20"
-      onClick={sessionData ? () => signOut() : () => signIn()}
+      className="rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-primary"
+      onClick={
+        sessionData
+          ? () => signOut()
+          : () => signIn('google', { callbackUrl: router.asPath })
+      }
     >
       {sessionData ? 'Sign out' : 'Sign in'}
     </button>
   );
 };
 
-// const Profile = (props: IProps) => {
-//   const {
-//     sessionData: { user },
-//   } = props;
-//   return (
-//     <>
-//       <li>
-//         <Link href="/home">
-//           <button className="rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-blue-800/20">
-//             Home
-//           </button>
-//         </Link>
-//       </li>
-//       <li>
-//         <Link href="/home">
-//           <>
-//             {!user?.image && <button>Dashboard</button>}
-//             {user?.image && (
-//               <Image
-//                 className="w-12 cursor-pointer rounded-full"
-//                 src={user.image}
-//                 alt={user.name}
-//                 width={12}
-//                 height={12}
-//               />
-//             )}
-//           </>
-//         </Link>
-//       </li>
-//     </>
-//   );
-// };
+const Profile = (props: IProps) => {
+  const { sessionData } = props;
+
+  const UserInitials = ({ name }) => {
+    const splits = name.split(' ');
+    let initials = splits[0].charAt(0);
+    if (splits.length > 1) {
+      initials = `${splits[0].charAt(0)}${splits[1].charAt(0)}`;
+    }
+    return initials;
+  };
+
+  return (
+    <div className="dropdown-end dropdown">
+      <button tabIndex={0} className="btn-lg">
+        <span className="flex items-center">
+          <span className="pr-2 text-2xl">
+            <GoTriangleDown />
+          </span>
+          {!sessionData?.user?.image && (
+            <span className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-black text-white">
+              {sessionData?.user?.name ? (
+                <UserInitials name={sessionData.user.name} />
+              ) : (
+                <FiUser />
+              )}
+            </span>
+          )}
+          {sessionData?.user?.image && (
+            <Image
+              className="w-12 cursor-pointer rounded-full"
+              src={sessionData.user.image}
+              alt={sessionData.user.name as string}
+              width={12}
+              height={12}
+            />
+          )}
+        </span>
+      </button>
+      <ul
+        tabIndex={0}
+        className="dropdown-content rounded-box w-52 bg-base-100 p-2 shadow"
+      >
+        <li className="mb-2">
+          <div>
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+              Signed in as:
+              <br />
+              <span className="font-bold">
+                {sessionData?.user?.name || sessionData?.user?.email}
+              </span>
+            </p>
+          </div>
+        </li>
+        <li className="justify-center">
+          <button
+            className="flex w-full justify-center rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-primary"
+            onClick={() => signOut()}
+          >
+            Sign out
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 const Nav = () => {
   const { data: sessionData } = useSession();
   return (
-    // <nav className="flex items-center justify-between py-10">
-    //   <Link href="/">
-    //     <button className="text-lg font-medium">allotr</button>
-    //   </Link>
-    //   <ul className="flex items-center gap-5">
-    //     <li>
-    //       <AuthControls sessionData={sessionData} />
-    //     </li>
-    //     {sessionData && <Profile sessionData={sessionData} />}
-    //   </ul>
-    // </nav>
     <div className="container navbar mx-auto bg-base-100 px-16">
       <div className="flex-1">
         <Link className="btn-ghost btn text-xl normal-case" href="/">
@@ -73,22 +105,11 @@ const Nav = () => {
         </Link>
       </div>
       <div className="flex-none">
-        <AuthControls sessionData={sessionData} />
-        {/* <button className="btn-ghost btn-square btn">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-5 w-5 stroke-current"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-            ></path>
-          </svg>
-        </button> */}
+        {sessionData ? (
+          <Profile sessionData={sessionData} />
+        ) : (
+          <AuthControls sessionData={sessionData} />
+        )}
       </div>
     </div>
   );
