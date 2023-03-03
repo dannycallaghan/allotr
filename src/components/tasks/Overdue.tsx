@@ -24,9 +24,9 @@ const Overdue = (props: IProps) => {
   return (
     <>
       {overdue && (
-        <div className="badge-error badge ml-2 font-bold text-white">
+        <span className="badge-error badge ml-2 font-bold text-white">
           OVERDUE
-        </div>
+        </span>
       )}
     </>
   );

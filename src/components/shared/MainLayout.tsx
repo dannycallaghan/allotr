@@ -9,15 +9,22 @@ const MainLayout = (props: IProps) => {
 
   const heroClass = hero ? 'hero' : 'w-full';
   const heroContentClasses = hero ? 'hero-content text-center' : '';
-  const heroWidthClass = hero ? 'max-w-md' : 'px-6 mx-auto w-full';
+  const heroWidthClass = hero ? 'max-w-md' : 'mx-auto w-full';
 
   return (
-    <main className={`flex h-full text-lg font-medium ${classes}`}>
+    <main
+      className={`container mx-auto flex px-16 text-lg font-medium ${classes}`}
+    >
       <div className={heroClass}>
         <div className={heroContentClasses}>
           <div className={heroWidthClass}>{children}</div>
         </div>
       </div>
+      <style jsx>{`
+        .main {
+          padding-bottom: 550px;
+        }
+      `}</style>
     </main>
   );
 };

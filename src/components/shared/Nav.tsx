@@ -66,7 +66,7 @@ const Nav = () => {
     //     {sessionData && <Profile sessionData={sessionData} />}
     //   </ul>
     // </nav>
-    <div className="navbar bg-base-100">
+    <div className="container navbar mx-auto bg-base-100 px-16">
       <div className="flex-1">
         <Link className="btn-ghost btn text-xl normal-case" href="/">
           allotr

@@ -1,3 +1,4 @@
+import Footer from './Footer';
 import Nav from './Nav';
 
 interface IProps {
@@ -7,10 +8,10 @@ interface IProps {
 const Layout = (props: IProps) => {
   const { children } = props;
   return (
-    <div className="container mx-auto flex h-screen flex-col justify-between px-16 font-poppins">
+    <div className="flex h-screen flex-col justify-between font-poppins">
       <Nav />
       {children}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

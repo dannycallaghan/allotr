@@ -40,3 +40,41 @@ export function isEmail(mail: string) {
   );
   return emailRegex.test(mail);
 }
+
+export function scrollToSmoothly(position: number, duration: number): void {
+  let pos = position;
+  let time = duration;
+  if (typeof pos !== 'number') {
+    pos = parseFloat(pos);
+  }
+  if (isNaN(pos)) {
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    throw 'Position must be a number';
+  }
+  if (pos < 0 || time < 0) {
+    return;
+  }
+  const currentPos = window.scrollY || window.screenTop;
+  let start: null | number = null;
+  time = time || 500;
+  window.requestAnimationFrame(function step(currentTime: number) {
+    start = !start ? currentTime : start;
+    if (currentPos < pos) {
+      const progress = currentTime - start;
+      window.scrollTo(0, ((pos - currentPos) * progress) / time + currentPos);
+      if (progress < time) {
+        window.requestAnimationFrame(step);
+      } else {
+        window.scrollTo(0, pos);
+      }
+    } else {
+      const progress = currentTime - start;
+      window.scrollTo(0, currentPos - ((currentPos - pos) * progress) / time);
+      if (progress < time) {
+        window.requestAnimationFrame(step);
+      } else {
+        window.scrollTo(0, pos);
+      }
+    }
+  });
+}
