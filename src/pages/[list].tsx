@@ -160,7 +160,7 @@ const List = () => {
               <div className="placeholder: order-3 flex w-full flex-col md:order-2 md:basis-2/5">
                 <p className="text-sm text-gray-400">Created:</p>
                 <p className="flex pb-2 text-sm">
-                  {formatAsFriendlyDate(data.createdAt)}
+                  {formatAsFriendlyDate(data.createdAt, true)}
                 </p>
               </div>
               <div className="order-2 flex w-full flex-col overflow-hidden text-ellipsis md:order-3 md:basis-3/5">
@@ -177,6 +177,7 @@ const List = () => {
                 <p className="flex pb-2 text-sm">
                   {formatAsFriendlyDate(
                     lastUpdated ? lastUpdated : data.updatedAt,
+                    true,
                   )}
                 </p>
               </div>

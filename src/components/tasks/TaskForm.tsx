@@ -362,6 +362,8 @@ const TaskForm = (props: IProps) => {
             update={handleUpdatePriority}
             disabled={!canAlterTask()}
             colors={false}
+            size="md"
+            id={taskData.id || (new Date().getSeconds() as unknown as string)}
           />
         </div>
         <div className="form-control w-full pb-2">

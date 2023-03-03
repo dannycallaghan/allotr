@@ -7,7 +7,7 @@ interface IProps {
   labels?: boolean;
   colors: boolean;
   id: string;
-  size?: string;
+  size: string;
   completed?: boolean;
 }
 
@@ -19,16 +19,11 @@ const TaskPriority = (props: IProps) => {
     labels = true,
     colors,
     id,
-    size = '',
+    size,
     completed = false,
   } = props;
   const [priority, setPriority] = useState<number>(value);
   const priorityClass = completed ? 'bg-gray-400' : 'bg-red-500';
-  let ratingSize = '';
-
-  if (size && size.length) {
-    ratingSize = `rating-${size}`;
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPriority(Number(e.currentTarget.dataset.index));
@@ -48,7 +43,7 @@ const TaskPriority = (props: IProps) => {
           <span>How important is this task?</span>
         </p>
       )}
-      <div className={`rating ${ratingSize}`}>
+      <div className={`rating rating-${size}`}>
         {[1, 2, 3, 4, 5].map((radio) => (
           <input
             key={radio}
@@ -65,7 +60,7 @@ const TaskPriority = (props: IProps) => {
                   ? 'disabled:bg-gray-700'
                   : 'disabled:bg-gray-500'
                 : ''
-            }`}
+            } ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'}`}
           />
         ))}
         {labels && (

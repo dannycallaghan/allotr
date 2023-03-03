@@ -1,9 +1,8 @@
 import { add, format } from 'date-fns';
 
-export const FRIENDLY_DATE_FORMAT = 'h:mmaa EEEE do MMMM yyyy';
-
 export function formatAsFriendlyDate(
   date: Date | string | number | undefined,
+  time,
   prefix = '',
 ) {
   if (!date) return '';
@@ -11,7 +10,13 @@ export function formatAsFriendlyDate(
   if (typeof input === 'string') {
     input = Number(date);
   }
-  return `${prefix}${format(input, FRIENDLY_DATE_FORMAT)}`;
+  if (time) {
+    return `${prefix} ${format(input, 'h:mmaa')} on ${format(
+      input,
+      'EEEE do MMMM yyyy',
+    )}`;
+  }
+  return `${prefix} ${format(input, 'EEEE do MMMM yyyy')}`;
 }
 
 export function capitaliseFirstLetter(str: string) {

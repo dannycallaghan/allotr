@@ -30,7 +30,7 @@ const Attachments = (props: IProps) => {
             {file.secure_url}
           </a>
         </p>
-        <p>Added {formatAsFriendlyDate(new Date(file.created_at))}</p>
+        <p>Added {formatAsFriendlyDate(new Date(file.created_at), true)}</p>
         <div className="flex justify-end">
           <RemoveAttachmentButton data={data} remove={() => remove(file.id)} />
         </div>
