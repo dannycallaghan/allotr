@@ -41,6 +41,14 @@ const Home: NextPage = () => {
           share your list with anyone - for free.
         </p>
         <div className="mb-44 flex flex-row justify-center gap-4">
+          <button
+            className="btn-primary btn-lg"
+            onClick={() => {
+              signIn(undefined, { callbackUrl: '/list/create' });
+            }}
+          >
+            Create a list
+          </button>
           {sessionData && (
             <Link href="/list/create">
               <button className="btn-primary btn-lg">Create a list</button>
