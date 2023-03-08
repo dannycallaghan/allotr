@@ -9,16 +9,6 @@ import {
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 
 export const listRouter = createTRPCRouter({
-  // * Get all lists - useful for testing
-  getAllLists: protectedProcedure.query(async () => {
-    try {
-      return ctx.prisma.user.findMany();
-    } catch (error) {
-      console.log('Unable to find any lists');
-      return null;
-    }
-  }),
-
   // * Get a single list by unique identifier
   getListById: publicProcedure
     .input(
@@ -29,7 +19,7 @@ export const listRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { id } = input;
       try {
-        return await ctx.prisma.list.findUnique({
+        const result = await ctx.prisma.list.findUnique({
           where: {
             id,
           },
@@ -48,9 +38,16 @@ export const listRouter = createTRPCRouter({
             },
           },
         });
+        if (result) {
+          return result;
+        }
+        const msg = `List not found: ${id}`;
+        console.log(msg);
+        return msg;
       } catch (error) {
-        console.log(`List not found: ${id}`);
-        return null;
+        const msg = `Error attempting to get list ${id}`;
+        console.log(msg);
+        return msg;
       }
     }),
 
