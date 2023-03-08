@@ -228,4 +228,55 @@ export const listRouter = createTRPCRouter({
         console.log('Error', error);
       }
     }),
+
+  // * Get all lists belonging to a single user
+  getDashboardLists: protectedProcedure.query(async ({ ctx }) => {
+    const authorId = ctx.session.user.id;
+    try {
+      const result = await ctx.prisma.list.findMany({
+        where: {
+          authorId,
+        },
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ],
+      });
+      return result;
+    } catch (error) {
+      return error;
+    }
+  }),
+
+  // * Get all tasks claimed by a user in other user's lists
+  getDashboardTasks: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    try {
+      const result = await ctx.prisma.task.findMany({
+        where: {
+          claimed: true,
+          assigneeId: userId,
+          NOT: {
+            authorId: userId,
+          },
+        },
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ],
+      });
+      if (result) {
+        return result;
+      }
+      const msg = `No tasks found for: ${userId}`;
+      console.log(msg);
+      return msg;
+    } catch (error) {
+      const msg = `Error attempting to get tasks belonging to ${userId}`;
+      console.log(msg);
+      return msg;
+    }
+  }),
 });

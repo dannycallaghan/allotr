@@ -53,7 +53,6 @@ const List = () => {
     let filtered = unfiltered;
 
     if (!lastUpdated) {
-      console.log('Setting last updated');
       setLastUpdated(unfiltered[0]?.updatedAt as Date);
     }
 

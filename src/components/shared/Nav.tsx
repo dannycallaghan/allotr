@@ -82,6 +82,14 @@ const Profile = (props: IProps) => {
             </p>
           </div>
         </li>
+        <li className="mb-2 justify-center">
+          <Link
+            className="flex w-full justify-center rounded-lg bg-primary py-2 px-4 text-sm font-medium text-white transition hover:bg-primary"
+            href="/dashboard"
+          >
+            Dashboard
+          </Link>
+        </li>
         <li className="justify-center">
           <button
             className="flex w-full justify-center rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-primary"

@@ -15,6 +15,16 @@ export type User = {
   image: string | null;
 };
 
+export type List = {
+  id?: string;
+  title: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+  user?: User | null;
+  authorId?: string;
+  description: string | null;
+};
+
 export type UpdateListDetailsInput = z.TypeOf<typeof updateListDetailsSchema>;
 
 export type Task = {

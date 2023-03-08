@@ -1,7 +1,8 @@
 import { test, expect } from '@jest/globals';
-import { AppRouter, appRouter } from '../../root';
+import type { AppRouter } from '../../root';
+import { appRouter } from '../../root';
 import { prisma } from '../../../db';
-import { inferProcedureInput } from '@trpc/server';
+import type { inferProcedureInput } from '@trpc/server';
 // import { createTRPCContext } from '../../trpc';
 
 const testListId = 'clezsox4a0000kz081qkelqhq';
