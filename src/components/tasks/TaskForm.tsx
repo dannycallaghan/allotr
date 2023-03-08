@@ -531,7 +531,7 @@ const TaskForm = (props: IProps) => {
           </div>
         )}
 
-        <div className="modal-action">
+        <div className="modal-action mb-6">
           {canAlterTask() ? (
             <>
               <button

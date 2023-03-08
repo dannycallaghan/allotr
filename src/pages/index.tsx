@@ -4,9 +4,28 @@ import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import ModalViewList from '../components/modals/ModalViewList';
 import MainLayout from '../components/shared/MainLayout';
+import { useEffect } from 'react';
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(
+          function (registration) {
+            console.log(
+              'Service Worker registration successful with scope: ',
+              registration.scope,
+            );
+          },
+          function (err) {
+            console.log('Service Worker registration failed: ', err);
+          },
+        );
+      });
+    }
+  }, []);
 
   return (
     <>
