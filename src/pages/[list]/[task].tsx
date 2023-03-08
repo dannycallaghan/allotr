@@ -46,7 +46,24 @@ const Task = () => {
       {!isLoading && data && (
         <MainLayout classes="items-start pt-10" hero={false}>
           <TaskForm listId={listId as string} task={data}>
-            <h1 className="text-5xl font-bold">Edit task</h1>
+            <>
+              <div className="breadcrumbs text-sm">
+                <ul>
+                  <li>
+                    <Link href="/" className="text-primary">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href={`/${data.listId}`} className="text-primary">
+                      {data.list.title}
+                    </Link>
+                  </li>
+                  <li>Edit task</li>
+                </ul>
+              </div>
+              <h1 className="text-5xl font-bold">Edit task</h1>
+            </>
           </TaskForm>
         </MainLayout>
       )}

@@ -123,6 +123,7 @@ export const listRouter = createTRPCRouter({
           include: {
             user: true,
             assignee: true,
+            list: true,
           },
         });
       } catch (error) {

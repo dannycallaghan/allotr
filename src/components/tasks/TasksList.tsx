@@ -13,10 +13,12 @@ interface IProps {
   listControls: ListControls;
   handleListChange: (data: ListControls) => void;
   total: number;
+  listTitle: string;
 }
 
 const TasksList = (props: IProps) => {
-  const { tasks, listId, listControls, handleListChange, total } = props;
+  const { tasks, listId, listControls, handleListChange, total, listTitle } =
+    props;
   const [allTasks, setAllTasks] = useState<Task[]>(tasks);
   const { data: session } = useSession();
 
@@ -66,7 +68,10 @@ const TasksList = (props: IProps) => {
           />
         </div>
         <div className="flex justify-end">
-          <Link href={`/${listId}/task`} className="btn-primary btn">
+          <Link
+            href={`/${listId}/task?listTitle=${listTitle}`}
+            className="btn-primary btn"
+          >
             <span className="pr-2 text-lg">
               <FiPlusSquare />
             </span>

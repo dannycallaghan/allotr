@@ -139,6 +139,16 @@ const List = () => {
       )}
       {!isLoading && data && (
         <MainLayout classes="items-start pt-10" hero={false}>
+          <div className="breadcrumbs text-sm">
+            <ul>
+              <li>
+                <Link href="/" className="text-primary">
+                  Home
+                </Link>
+              </li>
+              <li>{data.title}</li>
+            </ul>
+          </div>
           <h1 className="overflow-hidden text-ellipsis pb-6 text-5xl font-bold">
             {data.title}
           </h1>
@@ -187,6 +197,7 @@ const List = () => {
           </div>
           <TasksList
             listId={data.id}
+            listTitle={data.title}
             tasks={tasks}
             listControls={listControls}
             handleListChange={handleListChange}

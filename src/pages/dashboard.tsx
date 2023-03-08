@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import { getSession } from 'next-auth/react';
+import Link from 'next/link';
 import DashboardLists from '../components/dashboard/DashboardLists';
 import DashboardTasks from '../components/dashboard/DashboardTasks';
 import MainLayout from '../components/shared/MainLayout';
@@ -8,6 +9,16 @@ const Dashboard: NextPage = () => {
   return (
     <>
       <MainLayout classes="items-start pt-10" hero={false}>
+        <div className="breadcrumbs text-sm">
+          <ul>
+            <li>
+              <Link href="/" className="text-primary">
+                Home
+              </Link>
+            </li>
+            <li>Dashboard</li>
+          </ul>
+        </div>
         <h1 className="text-5xl font-bold">Dashboard</h1>
         <p className="py-6">
           Welcome. You can find all of your lists and tasks right here.

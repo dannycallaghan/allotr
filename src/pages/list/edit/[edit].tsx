@@ -109,6 +109,16 @@ const EditPage: NextPage = () => {
     return (
       <>
         <MainLayout classes="items-start pt-10" hero={false}>
+          <div className="breadcrumbs text-sm">
+            <ul>
+              <li>
+                <Link href="/" className="text-primary">
+                  Home
+                </Link>
+              </li>
+              <li>Edit your list details</li>
+            </ul>
+          </div>
           <h1 className="text-5xl font-bold">Edit your list details</h1>
           <p className="py-6">Remember that we just need a list title, OK?</p>
           {editMutation.isError && (
@@ -190,7 +200,7 @@ const EditPage: NextPage = () => {
                 </label>
               </div>
               <div className="flex justify-end gap-4">
-                <Link href="/">
+                <Link href={`/${listData.id}`}>
                   <button type="button" className="btn-ghost btn">
                     Cancel
                   </button>

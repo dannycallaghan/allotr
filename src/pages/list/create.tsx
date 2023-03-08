@@ -56,6 +56,16 @@ const CreatePage: NextPage = () => {
   return (
     <>
       <MainLayout classes="items-start pt-10" hero={false}>
+        <div className="breadcrumbs text-sm">
+          <ul>
+            <li>
+              <Link href="/" className="text-primary">
+                Home
+              </Link>
+            </li>
+            <li>Create your list</li>
+          </ul>
+        </div>
         <h1 className="text-5xl font-bold">Create your list</h1>
         <p className="py-6">
           OK, so what do you need to do? Remember, at this point, all we need is
