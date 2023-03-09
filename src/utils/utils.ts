@@ -29,6 +29,8 @@ export function compareTime(a: Date | string, b: Date | string) {
   return a1 === b1;
 }
 
+export const localStorageDB = 'allotr-list-controls';
+
 export function getTomorrow() {
   return format(add(new Date(), { days: 1 }), 'dd/MM/yy');
 }

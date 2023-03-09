@@ -7,7 +7,7 @@ import PageSpinner from '../components/shared/PageSpinner';
 import ListControls from '../components/lists/ListControls';
 import { api } from '../utils/api';
 import Owner from '../components/shared/Owner';
-import { formatAsFriendlyDate } from '../utils/utils';
+import { formatAsFriendlyDate, localStorageDB } from '../utils/utils';
 import Copy from '../components/shared/Copy';
 import TasksList from '../components/tasks/TasksList';
 import type { Task } from '../types/types';
@@ -35,6 +35,17 @@ const List = () => {
   const forceUpdate = useCallback(() => updateState({}), []);
   const [lastUpdated, setLastUpdated] = useState<null | Date>(null);
 
+  useEffect(() => {
+    if (window.localStorage && window.localStorage.getItem(localStorageDB)) {
+      try {
+        const controls = JSON.parse(
+          window.localStorage.getItem(localStorageDB) as string,
+        );
+        setListControls(controls);
+      } catch (e) {}
+    }
+  }, []);
+
   const [listControls, setListControls] = useState<ListControls>({
     open: false,
     my: false,
@@ -43,10 +54,19 @@ const List = () => {
   });
 
   const handleListChange = (data: ListControls) => {
-    setListControls((prev) => ({
-      ...prev,
-      ...data,
-    }));
+    setListControls((prev) => {
+      const newControls = {
+        ...prev,
+        ...data,
+      };
+      if (window.localStorage) {
+        window.localStorage.setItem(
+          localStorageDB,
+          JSON.stringify(newControls),
+        );
+      }
+      return newControls;
+    });
   };
 
   const filterAndOrderList = async (unfiltered: Task[]) => {
@@ -154,7 +174,7 @@ const List = () => {
           </h1>
           <ListControls
             listId={data.id}
-            listOwner={data.user.id}
+            listOwner={data?.user?.id}
             path={currentPath}
           />
           <div className="mb-6 rounded-lg p-10 shadow-lg">

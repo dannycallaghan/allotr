@@ -38,16 +38,17 @@ export const listRouter = createTRPCRouter({
             },
           },
         });
-        if (result) {
-          return result;
-        }
-        const msg = `List not found: ${id}`;
-        console.log(msg);
-        return msg;
+        // if (result) {
+        return result;
+        // }
+        // const msg = `List not found: ${id}`;
+        // console.log(msg);
+        // return msg;
       } catch (error) {
-        const msg = `Error attempting to get list ${id}`;
-        console.log(msg);
-        return msg;
+        return null;
+        // const msg = `Error attempting to get list ${id}`;
+        // console.log(msg);
+        // return msg;
       }
     }),
 

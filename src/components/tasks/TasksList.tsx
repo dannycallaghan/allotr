@@ -79,11 +79,16 @@ const TasksList = (props: IProps) => {
         </div>
       </div>
       <div className="pb-6">
-        {allTasks.map((task) => (
-          <div key={task.id}>
-            <TaskItem data={task} remove={handleDelete} claim={handleClaim} />
-          </div>
-        ))}
+        {!!allTasks.length &&
+          allTasks.map((task) => (
+            <div key={task.id}>
+              <TaskItem data={task} remove={handleDelete} claim={handleClaim} />
+            </div>
+          ))}
+        {allTasks.length === 0 && total !== 0 && (
+          <p>Oops, you need to change your list filters to see these tasks.</p>
+        )}
+        {total === 0 && <p>Oh no, this list doesn't contain any tasks yet.</p>}
       </div>
     </>
   );
