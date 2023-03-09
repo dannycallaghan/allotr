@@ -26,7 +26,7 @@ export default function SignIn({
         break;
       case 'Callback':
         errorMessage =
-          "Sorry, there was a problem. If you've signed in to allotr before, please ensure you sign in with the same provider and account you used originally.";
+          'Sorry, there was a problem. If you have signed in to allotr before, please ensure you sign in with the same provider and account you used originally.';
         break;
       default:
         errorMessage =
@@ -34,6 +34,7 @@ export default function SignIn({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const AuthIcon = ({ provider }) => {
     if (provider === 'google') return <ImGoogle3 />;

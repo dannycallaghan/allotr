@@ -31,6 +31,7 @@ const DeleteTaskButton = (props: IProps) => {
   };
 
   const checkCount = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (count: number) => {
       if (deleteCount === 2 && data && data.id) {
         deleteMutation.mutate({ id: data.id });

@@ -88,7 +88,9 @@ const TasksList = (props: IProps) => {
         {allTasks.length === 0 && total !== 0 && (
           <p>Oops, you need to change your list filters to see these tasks.</p>
         )}
-        {total === 0 && <p>Oh no, this list doesn't contain any tasks yet.</p>}
+        {total === 0 && (
+          <p>Oh no, this list doesn&apos;t contain any tasks yet.</p>
+        )}
       </div>
     </>
   );
