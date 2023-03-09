@@ -183,6 +183,7 @@ const TaskForm = (props: IProps) => {
   return (
     <>
       {children}
+
       {mode === 'create' ? (
         <p className="py-4">Got a new task, huh? All we need is a title.</p>
       ) : (
