@@ -14,7 +14,7 @@ const MainLayout = (props: IProps) => {
 
   return (
     <main
-      className={`container mx-auto px-16 text-lg font-medium ${heroWrapperClass} ${classes}`}
+      className={`container mx-auto flex-1 px-16 text-lg font-medium ${heroWrapperClass} ${classes}`}
     >
       <div className={heroClass}>
         <div className={heroContentClasses}>

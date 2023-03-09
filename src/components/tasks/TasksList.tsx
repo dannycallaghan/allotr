@@ -43,7 +43,6 @@ const TasksList = (props: IProps) => {
             (data.assignee = { ...session.user }),
               (data.claimed = !data.claimed);
           }
-          console.log(data);
           return data;
         }
         return item;

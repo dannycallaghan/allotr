@@ -21,10 +21,10 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="footer footer-center bg-base-content pt-10 pb-20 text-primary-content">
-      <div className="container mx-auto flex justify-end px-16">
+    <footer className="bg-base-content pb-10 text-primary-content">
+      <div className="container mx-auto my-0 flex justify-end px-16 py-4">
         <button
-          className="btn invisible gap-2"
+          className="invisible btn-sm btn gap-2"
           type="button"
           onClick={() => scrollToSmoothly(0, 250)}
         >
@@ -32,11 +32,11 @@ const Footer = () => {
           Back to top
         </button>
       </div>
-      <div>
+      <div className="text-center ">
         <p className="font-bold">
           <span className="text-lg">allotr</span>
           <br />
-          Making light work since 2023
+          Task management for everybody else.
         </p>
         <p>Copyright &copy; 2023 - All rights reserved</p>
       </div>

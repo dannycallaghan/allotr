@@ -14,8 +14,6 @@ const AuthControls = (props: IProps) => {
   const { sessionData } = props;
   const router = useRouter();
 
-  console.log(sessionData);
-
   return (
     <button
       className="rounded-lg bg-cyan-500 py-2 px-4 text-sm font-medium text-white transition hover:bg-primary"
@@ -41,8 +39,6 @@ const Profile = (props: IProps) => {
     }
     return initials;
   };
-
-  console.log(sessionData);
 
   return (
     <div className="dropdown-end dropdown">

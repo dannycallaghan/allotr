@@ -1,28 +1,29 @@
-# Create T3 App
+# allotr
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+**Task management for everybody else**
 
-## What's next? How do I make an app with this?
+allotr is a collaborative task management application allowing the creation, monitoring, maintaining and completion of tasks that can be shared with anyone. allotr has a clean, intuitive, beautiful user interface that is easy to use and works anywere. Free and with no limits.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+allotr proudly uses the T3 technology stack, and the following services:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Deployment and hosting through [Vercel](https://vercel.com/).
+- Images hosted and served via [Cloudinary](https://cloudinary.com/).
+- Database hosted at [Planetscale](https://planetscale.com/).
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Try it yourself
 
-## Learn More
+You can visit and use allotr at [allotr.app](https://allotr.app).
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Screens
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360586/img1_pl4st3.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360425/img2_f8vpcm.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360692/img3_dzquqk.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360784/img4_mqhyen.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360864/img5_levfvr.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360048/img6_la4ewn.png 'allotr screen')
+![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360930/img7_a9mvgq.png 'allotr screen')
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## About
 
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Developed by Danny Callaghan for CM3070 Final Project, during his BSc Computer Science degree at the University of London.

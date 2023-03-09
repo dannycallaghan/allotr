@@ -139,7 +139,6 @@ const TaskForm = (props: IProps) => {
   };
 
   const handleUpdatePriority = (value: number) => {
-    console.log(`Change priority to ${value}`);
     setTaskData((prev) => ({
       ...prev,
       priority: value,

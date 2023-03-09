@@ -61,7 +61,6 @@ const Attachments = (props: IProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadError = (result: unknown, widget: unknown) => {
-    console.log('ERROR CALLED');
     setUploadInfo((prev) => ({
       ...prev,
       used: true,

@@ -34,21 +34,13 @@ const Home: NextPage = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MainLayout hero={false}>
+      <MainLayout hero>
         <h1 className="text-5xl font-bold">Got things to do?</h1>
         <p className="py-6">
           Create, detail, prioritise, plan and assign your tasks with ease. Then
           share your list with anyone - for free.
         </p>
         <div className="mb-44 flex flex-row justify-center gap-4">
-          <button
-            className="btn-primary btn-lg"
-            onClick={() => {
-              signIn(undefined, { callbackUrl: '/list/create' });
-            }}
-          >
-            Create a list
-          </button>
           {sessionData && (
             <Link href="/list/create">
               <button className="btn-primary btn-lg">Create a list</button>
