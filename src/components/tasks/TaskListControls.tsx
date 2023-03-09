@@ -11,7 +11,7 @@ const TaskListControls = (props: IProps) => {
   const { listControls, handleValueChange } = props;
 
   return (
-    <>
+    <div className="w-full flex-grow justify-start">
       <TaskListFilters
         listControls={listControls}
         handleValueChange={handleValueChange}
@@ -20,7 +20,7 @@ const TaskListControls = (props: IProps) => {
         listControls={listControls}
         handleValueChange={handleValueChange}
       />
-    </>
+    </div>
   );
 };
 

@@ -138,14 +138,14 @@ const List = () => {
     <>
       {isLoading && (
         <MainLayout>
-          <h1 className="text-5xl font-bold">Just one sec...</h1>
+          <h1 className="text-4xl font-bold md:text-5xl">Just one sec...</h1>
           <p className="py-6">Looking in the kitchen drawer for your list.</p>
           <PageSpinner />
         </MainLayout>
       )}
       {!isLoading && !data && (
         <MainLayout>
-          <h1 className="text-5xl font-bold">What was that?</h1>
+          <h1 className="text-4xl font-bold md:text-5xl">What was that?</h1>
           <p className="py-6">
             Sorry, we can&apos;t find any list with that name. Perhaps it&apos;s
             been thrown in the bin by it&apos;s owner?
@@ -158,7 +158,7 @@ const List = () => {
         </MainLayout>
       )}
       {!isLoading && data && (
-        <MainLayout classes="items-start pt-10" hero={false}>
+        <MainLayout classes="items-start" hero={false}>
           <div className="breadcrumbs text-sm">
             <ul>
               <li>
@@ -169,7 +169,7 @@ const List = () => {
               <li>{data.title}</li>
             </ul>
           </div>
-          <h1 className="overflow-hidden text-ellipsis pb-6 text-5xl font-bold">
+          <h1 className="overflow-hidden text-ellipsis pb-6 text-4xl font-bold md:text-5xl">
             {data.title}
           </h1>
           <ListControls
@@ -177,7 +177,7 @@ const List = () => {
             listOwner={data?.user?.id}
             path={currentPath}
           />
-          <div className="mb-6 rounded-lg p-10 shadow-lg">
+          <div className="rounded-md bg-gray-100 p-4 pb-10 sm:mb-6 sm:rounded-lg sm:p-10 sm:shadow-lg">
             <div
               className={`flex flex-row flex-wrap ${
                 !!data.description.length ? 'pb-6' : ''

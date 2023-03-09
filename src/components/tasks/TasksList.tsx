@@ -56,9 +56,9 @@ const TasksList = (props: IProps) => {
 
   return (
     <>
-      <div className="mb-6 flex items-center">
-        <div className="flex flex-grow items-center text-gray-700">
-          <p>
+      <div className="mb-6 flex flex-col items-center justify-start sm:flex-row">
+        <div className="order-2 flex w-full flex-grow flex-col items-center justify-start text-gray-700 sm:order-1 md:flex-row">
+          <p className=" w-full whitespace-nowrap pr-2 pt-2 sm:pt-0 md:w-auto">
             Showing {allTasks.length} of {total} task{total == 1 ? '' : 's'}
           </p>
           <TaskListControls
@@ -66,7 +66,7 @@ const TasksList = (props: IProps) => {
             handleValueChange={handleListChange}
           />
         </div>
-        <div className="flex justify-end">
+        <div className="order-1 mt-4 flex w-full sm:order-2 sm:w-auto sm:justify-end md:mt-0">
           <Link
             href={`/${listId}/task?listTitle=${listTitle}`}
             className="btn-primary btn"

@@ -22,7 +22,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-base-content pb-10 text-primary-content">
-      <div className="container mx-auto my-0 flex justify-end px-16 py-4">
+      <div className="container mx-auto my-0 flex justify-end py-4 px-2 md:px-16">
         <button
           className="invisible btn-sm btn gap-2"
           type="button"

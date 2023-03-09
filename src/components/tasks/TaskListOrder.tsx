@@ -17,8 +17,8 @@ const TaskListOrder = (props: IProps) => {
 
   return (
     <>
-      <div className="dropdown dropdown-bottom ml-2">
-        <button tabIndex={0} className="btn-sm btn m-1">
+      <div className="dropdown dropdown-bottom mt-2 ml-2 sm:mt-0 sm:ml-4">
+        <button tabIndex={0} className="btn-sm btn">
           <span className="pr-2">
             <GoTriangleDown />
           </span>

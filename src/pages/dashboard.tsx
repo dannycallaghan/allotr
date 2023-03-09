@@ -8,7 +8,7 @@ import MainLayout from '../components/shared/MainLayout';
 const Dashboard: NextPage = () => {
   return (
     <>
-      <MainLayout classes="items-start pt-10" hero={false}>
+      <MainLayout classes="items-start" hero={false}>
         <div className="breadcrumbs text-sm">
           <ul>
             <li>
@@ -19,7 +19,7 @@ const Dashboard: NextPage = () => {
             <li>Dashboard</li>
           </ul>
         </div>
-        <h1 className="text-5xl font-bold">Dashboard</h1>
+        <h1 className="text-4xl font-bold md:text-5xl">Dashboard</h1>
         <p className="py-6">
           Welcome. You can find all of your lists and tasks right here.
         </p>

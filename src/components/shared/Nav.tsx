@@ -42,9 +42,9 @@ const Profile = (props: IProps) => {
 
   return (
     <div className="dropdown-end dropdown">
-      <button tabIndex={0} className="btn-lg">
+      <button tabIndex={0} className="btn-lg px-0">
         <span className="flex items-center">
-          <span className="pr-2 text-2xl">
+          <span className="pr-2 text-2xl text-white sm:text-black">
             <GoTriangleDown />
           </span>
           {!sessionData?.user?.image && (
@@ -69,7 +69,7 @@ const Profile = (props: IProps) => {
       </button>
       <ul
         tabIndex={0}
-        className="dropdown-content rounded-box w-52 bg-base-100 p-2 shadow"
+        className="dropdown-content rounded-box w-52 bg-base-content p-2 text-white shadow sm:bg-base-100 sm:text-black"
       >
         <li className="mb-2">
           <div>
@@ -106,9 +106,12 @@ const Profile = (props: IProps) => {
 const Nav = () => {
   const { data: sessionData } = useSession();
   return (
-    <div className="container navbar mx-auto bg-base-100 px-16">
+    <div className="container navbar mx-auto bg-base-content sm:bg-base-100 md:px-16">
       <div className="flex-1">
-        <Link className="btn-ghost btn text-xl normal-case" href="/">
+        <Link
+          className="btn-ghost btn px-0 text-2xl normal-case text-white sm:text-black"
+          href="/"
+        >
           allotr
         </Link>
       </div>

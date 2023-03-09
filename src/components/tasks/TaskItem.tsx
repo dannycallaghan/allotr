@@ -80,7 +80,7 @@ const TaskItem = (props: IProps) => {
         {(data.priority > 0 || data?.dueDate) && (
           <div className="mb-4 flex rounded-md bg-red-100 p-2 text-sm">
             <div className="flex w-full">
-              <div className="flex basis-10/12">
+              <div className="flex basis-8/12">
                 {data?.dueDate && (
                   <p>
                     {formatAsFriendlyDate(data.dueDate, false, 'Due on ')}
@@ -88,7 +88,7 @@ const TaskItem = (props: IProps) => {
                   </p>
                 )}
               </div>
-              <div className="flex basis-2/12 justify-center">
+              <div className="flex basis-4/12 justify-center">
                 {data.priority > 0 && (
                   <TaskPriority
                     value={data.priority}

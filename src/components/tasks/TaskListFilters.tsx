@@ -29,31 +29,12 @@ const TaskListFilters = (props: IProps) => {
     }
 
     handleValueChange(data);
-
-    // setListControls((prev) => {
-    //   const data = {
-    //     ...prev,
-    //     [name]: value,
-    //   };
-
-    //   if (value) {
-    //     if (name === 'unclaimed') {
-    //       data.my = false;
-    //       data.open = true;
-    //     }
-    //     if (name === 'my' || name === 'open') {
-    //       data.unclaimed = false;
-    //     }
-    //   }
-
-    //   return data;
-    // });
   };
 
   return (
     <>
-      <div className="dropdown dropdown-bottom ml-2">
-        <button tabIndex={0} className="btn-sm btn m-1">
+      <div className="dropdown dropdown-bottom">
+        <button tabIndex={0} className="btn-sm btn">
           <span className="pr-2">
             <GoTriangleDown />
           </span>

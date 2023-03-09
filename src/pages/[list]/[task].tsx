@@ -24,14 +24,14 @@ const Task = () => {
     <>
       {isLoading && (
         <MainLayout>
-          <h1 className="text-5xl font-bold">Just one sec...</h1>
+          <h1 className="text-4xl font-bold md:text-5xl">Just one sec...</h1>
           <p className="py-6">Looking in the kitchen drawer for your task.</p>
           <PageSpinner />
         </MainLayout>
       )}
       {!isLoading && !data && (
         <MainLayout>
-          <h1 className="text-5xl font-bold">What was that?</h1>
+          <h1 className="text-4xl font-bold md:text-5xl">What was that?</h1>
           <p className="py-6">
             Sorry, we can&apos;t find any task with that name. Perhaps it&apos;s
             been thrown in the bin by it&apos;s owner?
@@ -44,7 +44,7 @@ const Task = () => {
         </MainLayout>
       )}
       {!isLoading && data && (
-        <MainLayout classes="items-start pt-10" hero={false}>
+        <MainLayout classes="items-start" hero={false}>
           <TaskForm listId={listId as string} task={data}>
             <>
               <div className="breadcrumbs text-sm">
@@ -62,7 +62,7 @@ const Task = () => {
                   <li>Edit task</li>
                 </ul>
               </div>
-              <h1 className="text-5xl font-bold">Edit task</h1>
+              <h1 className="text-4xl font-bold md:text-5xl">Edit task</h1>
             </>
           </TaskForm>
         </MainLayout>

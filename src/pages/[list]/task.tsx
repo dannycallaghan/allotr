@@ -10,7 +10,7 @@ const CreateTask: NextPage = () => {
   const { listTitle, list } = router.query;
 
   return (
-    <MainLayout classes="items-start pt-10" hero={false}>
+    <MainLayout classes="items-start" hero={false}>
       <TaskForm>
         <>
           <div className="breadcrumbs text-sm">
@@ -28,7 +28,7 @@ const CreateTask: NextPage = () => {
               <li>Add task</li>
             </ul>
           </div>
-          <h1 className="overflow-hidden text-ellipsis pb-6 text-5xl font-bold">
+          <h1 className="overflow-hidden text-ellipsis pb-6 text-4xl font-bold md:text-5xl">
             Add task
           </h1>
         </>
@@ -55,7 +55,7 @@ export async function getServerSideProps(context: any) {
       },
     };
   }
-  console.log(session);
+
   return {
     props: { session },
   };

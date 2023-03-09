@@ -55,7 +55,7 @@ const CreatePage: NextPage = () => {
 
   return (
     <>
-      <MainLayout classes="items-start pt-10" hero={false}>
+      <MainLayout classes="items-start" hero={false}>
         <div className="breadcrumbs text-sm">
           <ul>
             <li>
@@ -66,7 +66,7 @@ const CreatePage: NextPage = () => {
             <li>Create your list</li>
           </ul>
         </div>
-        <h1 className="text-5xl font-bold">Create your list</h1>
+        <h1 className="text-4xl font-bold md:text-5xl">Create your list</h1>
         <p className="py-6">
           OK, so what do you need to do? Remember, at this point, all we need is
           a title - it&apos;s that easy.
@@ -77,7 +77,7 @@ const CreatePage: NextPage = () => {
             wrong. It&apos;s us, not you. Try again in a minute?
           </Alert>
         )}
-        <div className="rounded-lg p-10 shadow-lg">
+        <div className="pb-10 md:rounded-lg md:p-10 md:shadow-lg">
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-control w-full pb-6">
               <label className="label" htmlFor="list-title">

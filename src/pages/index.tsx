@@ -35,7 +35,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout hero>
-        <h1 className="text-5xl font-bold">Got things to do?</h1>
+        <h1 className="text-4xl font-bold md:text-5xl">Got things to do?</h1>
         <p className="py-6">
           Create, detail, prioritise, plan and assign your tasks with ease. Then
           share your list with anyone - for free.

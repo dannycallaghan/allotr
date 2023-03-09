@@ -15,7 +15,7 @@ const Signin = () => {
 
   return (
     <MainLayout>
-      <h1 className="text-5xl font-bold">Hold on there...</h1>
+      <h1 className="text-4xl font-bold md:text-5xl">Hold on there...</h1>
       <p className="py-6">Checking your papers.</p>
       <PageSpinner />
     </MainLayout>

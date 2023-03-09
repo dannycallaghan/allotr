@@ -272,7 +272,7 @@ const TaskForm = (props: IProps) => {
               {isCreator() && (
                 <div className="form-control w-full pb-2">
                   <label className="label" htmlFor="task-suggested">
-                    <span>Or maybe assign this task to someone else?</span>
+                    <span>Or maybe suggest this task to someone else?</span>
                   </label>
                   <input
                     type="text"
@@ -291,7 +291,7 @@ const TaskForm = (props: IProps) => {
                   />
                   <label className="label">
                     <span className="label-text-alt">
-                      Assignee&apos;s name or email address.
+                      Person&apos;s name or email address.
                     </span>
                     <span
                       className={`label-text-alt ${

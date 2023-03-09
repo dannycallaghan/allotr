@@ -81,7 +81,7 @@ const EditPage: NextPage = () => {
   if (isLoading) {
     return (
       <MainLayout>
-        <h1 className="text-5xl font-bold">Just one sec...</h1>
+        <h1 className="text-4xl font-bold md:text-5xl">Just one sec...</h1>
         <p className="py-6">Looking in the kitchen drawer for your list.</p>
         <PageSpinner />
       </MainLayout>
@@ -91,7 +91,7 @@ const EditPage: NextPage = () => {
   if (!isLoading && !listData) {
     return (
       <MainLayout>
-        <h1 className="text-5xl font-bold">What was that?</h1>
+        <h1 className="text-4xl font-bold md:text-5xl">What was that?</h1>
         <p className="py-6">
           Sorry, we can&apos;t find any list with that name. Perhaps it&apos;s
           been thrown in the bin by it&apos;s owner?
@@ -108,7 +108,7 @@ const EditPage: NextPage = () => {
   if (!isLoading && listData) {
     return (
       <>
-        <MainLayout classes="items-start pt-10" hero={false}>
+        <MainLayout classes="items-start" hero={false}>
           <div className="breadcrumbs text-sm">
             <ul>
               <li>
@@ -119,7 +119,9 @@ const EditPage: NextPage = () => {
               <li>Edit your list details</li>
             </ul>
           </div>
-          <h1 className="text-5xl font-bold">Edit your list details</h1>
+          <h1 className="text-4xl font-bold md:text-5xl">
+            Edit your list details
+          </h1>
           <p className="py-6">Remember that we just need a list title, OK?</p>
           {editMutation.isError && (
             <Alert type="error">
@@ -127,7 +129,7 @@ const EditPage: NextPage = () => {
               wrong. It&apos;s us, not you. Try again in a minute?
             </Alert>
           )}
-          <div className="rounded-lg p-10 shadow-lg">
+          <div className="pb-10 md:rounded-lg md:p-10 md:shadow-lg">
             <form onSubmit={handleSubmit} noValidate>
               <div className="form-control w-full pb-6">
                 <label className="label" htmlFor="list-title">
