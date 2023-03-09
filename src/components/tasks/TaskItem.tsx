@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Task } from '../../types/types';
 import { formatAsFriendlyDate } from '../../utils/utils';
 import ToggleTaskStatus from './ToggleTaskStatus';
@@ -23,6 +23,12 @@ const TaskItem = (props: IProps) => {
   const handleToggleStatus = (state: boolean) => {
     setCompleted(state);
   };
+
+  useEffect(() => {
+    if (data) {
+      setCompleted(data.isComplete);
+    }
+  }, [data]);
 
   return (
     <>

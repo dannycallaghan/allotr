@@ -29,12 +29,21 @@ const TaskPriority = (props: IProps) => {
     setPriority(Number(e.currentTarget.dataset.index));
   };
 
+  const handleClear = () => {
+    setPriority(0);
+  };
+
   useEffect(() => {
     if (update) {
       update(priority);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priority]);
+
+  useEffect(() => {
+    setPriority(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <>
@@ -44,7 +53,16 @@ const TaskPriority = (props: IProps) => {
         </p>
       )}
       <div className={`rating rating-${size}`}>
-        {[1, 2, 3, 4, 5].map((radio) => (
+        {labels && (
+          <button
+            className="btn-outline btn-sm btn mr-2"
+            disabled={priority === 0}
+            onClick={handleClear}
+          >
+            clear
+          </button>
+        )}
+        {[0, 1, 2, 3, 4, 5].map((radio, i) => (
           <input
             key={radio}
             type="radio"
@@ -60,7 +78,9 @@ const TaskPriority = (props: IProps) => {
                   ? 'disabled:bg-gray-700'
                   : 'disabled:bg-gray-500'
                 : ''
-            } ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'}`}
+            } ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'} ${
+              i === 0 ? 'hidden' : ''
+            }`}
           />
         ))}
         {labels && (
