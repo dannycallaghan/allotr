@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MainLayout>
+      <MainLayout hero={false}>
         <h1 className="text-5xl font-bold">Got things to do?</h1>
         <p className="py-6">
           Create, detail, prioritise, plan and assign your tasks with ease. Then
@@ -58,7 +58,7 @@ const Home: NextPage = () => {
             <button
               className="btn-primary btn-lg"
               onClick={() => {
-                signIn('google', { callbackUrl: '/list/create' });
+                signIn(undefined, { callbackUrl: '/list/create' });
               }}
             >
               Create a list

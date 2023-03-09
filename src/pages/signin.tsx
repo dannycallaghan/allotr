@@ -10,7 +10,7 @@ const Signin = () => {
 
   useEffect(() => {
     const url = callbackUrl ? (callbackUrl as string) : '';
-    signIn('google', { callbackUrl: url });
+    signIn(undefined, { callbackUrl: url });
   }, [callbackUrl]);
 
   return (

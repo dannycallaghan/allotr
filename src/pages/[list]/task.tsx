@@ -50,7 +50,7 @@ export async function getServerSideProps(context: any) {
     }
     return {
       redirect: {
-        destination: `/signin?${callback}`,
+        destination: `/auth/signin?${callback}`,
         permanent: false,
       },
     };

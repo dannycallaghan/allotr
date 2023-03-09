@@ -22,7 +22,7 @@ const AuthControls = (props: IProps) => {
       onClick={
         sessionData
           ? () => signOut()
-          : () => signIn('google', { callbackUrl: router.asPath })
+          : () => signIn(undefined, { callbackUrl: router.asPath })
       }
     >
       {sessionData ? 'Sign out' : 'Sign in'}
