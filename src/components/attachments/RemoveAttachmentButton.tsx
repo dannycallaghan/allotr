@@ -50,18 +50,22 @@ const RemoveAttachmentButton = (props: IProps) => {
   }, [deleteCount]);
 
   return (
-    <AuthAction
-      type="button"
-      href={`/${data.listId}/${data.id}`}
-      match={[data?.assignee?.id, data.authorId]}
-      onClick={handleRemove}
-      classes={`btn-sm btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
-    >
-      <span className="pr-2 text-lg">
-        {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}
-      </span>
-      {deleteCount === 0 ? 'Remove attachment' : 'Sure? Click again'}
-    </AuthAction>
+    <>
+      <AuthAction
+        type="button"
+        href={`/${data.listId}/${data.id}`}
+        match={[data?.assignee?.id, data?.user?.id]}
+        onClick={handleRemove}
+        classes={`btn-sm btn ${
+          deleteCount === 0 ? 'btn-error' : 'btn-warning'
+        }`}
+      >
+        <span className="pr-2 text-lg">
+          {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}
+        </span>
+        {deleteCount === 0 ? 'Remove attachment' : 'Sure? Click again'}
+      </AuthAction>
+    </>
   );
 };
 

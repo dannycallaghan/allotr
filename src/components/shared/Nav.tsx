@@ -106,7 +106,7 @@ const Profile = (props: IProps) => {
 const Nav = () => {
   const { data: sessionData } = useSession();
   return (
-    <div className="container navbar mx-auto bg-base-content sm:bg-base-100 md:px-16">
+    <div className="container navbar mx-auto bg-base-content sm:bg-base-100 lg:px-16">
       <div className="flex-1">
         <Link
           className="btn-ghost btn px-0 text-2xl normal-case text-white sm:text-black"
