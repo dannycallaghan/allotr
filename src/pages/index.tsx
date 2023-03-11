@@ -32,7 +32,6 @@ const Home: NextPage = () => {
       <Head>
         <title>allotr</title>
         <meta name="description" content="" />
-        <link rel="manifest" href="manifest.webmanifest" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout hero>
