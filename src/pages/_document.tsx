@@ -4,7 +4,7 @@ function Document() {
   return (
     <Html>
       <Head>
-        <link rel="manifest" href="manifest.webmanifest" />
+        <link rel="manifest" href="site.webmanifest" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
