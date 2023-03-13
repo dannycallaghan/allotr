@@ -1,4 +1,4 @@
-const VERSION = 5;
+const VERSION = 6;
 const PRECACHE = `allotr-precache-v${VERSION}`;
 const RUNTIME = 'allotr-runtime';
 
