@@ -31,7 +31,12 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>allotr</title>
-        <meta name="description" content="" />
+        <meta name="description" content="Task management for everybody else" />
+        <meta name="theme-color" content="#202938" />
+        <link
+          rel="apple-touch-icon"
+          href="/images/icons/icon-192x192.png"
+        ></link>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout hero>
