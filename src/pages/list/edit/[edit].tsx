@@ -15,6 +15,7 @@ const initialListData: () => UpdateListDetailsInput = () => {
     title: '',
     description: '',
     id: '',
+    authorId: '',
   };
 };
 
@@ -46,6 +47,7 @@ const EditPage: NextPage = () => {
         id: data.id,
         title: data.title,
         description: data.description,
+        authorId: data.authorId,
       });
     }
   };
@@ -67,6 +69,7 @@ const EditPage: NextPage = () => {
         id: data.id,
         title: data.title,
         description: data.description,
+        authorId: data.authorId,
       });
     }
   }, [data]);

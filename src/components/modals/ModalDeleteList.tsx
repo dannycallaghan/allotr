@@ -16,7 +16,7 @@ const ModalDeleteList = (props: IProps) => {
   });
 
   const handleDelete = () => {
-    deleteMutation.mutate({ id: props.listId });
+    deleteMutation.mutate({ id: props.listId, authorId: props.listOwner });
     router.push('/');
   };
   return (

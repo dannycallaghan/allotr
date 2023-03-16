@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import {
   createListSchema,
@@ -38,17 +39,9 @@ export const listRouter = createTRPCRouter({
             },
           },
         });
-        // if (result) {
         return result;
-        // }
-        // const msg = `List not found: ${id}`;
-        // console.log(msg);
-        // return msg;
       } catch (error) {
-        return null;
-        // const msg = `Error attempting to get list ${id}`;
-        // console.log(msg);
-        // return msg;
+        return error;
       }
     }),
 
@@ -69,7 +62,7 @@ export const listRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        console.log('Error', error);
+        return error;
       }
     }),
 
@@ -77,6 +70,13 @@ export const listRouter = createTRPCRouter({
   updateListDetails: protectedProcedure
     .input(updateListDetailsSchema)
     .mutation(async ({ ctx, input }) => {
+      if (input.authorId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Only the list author can update the list.',
+        });
+      }
+
       try {
         return await ctx.prisma.list.update({
           where: {
@@ -94,8 +94,15 @@ export const listRouter = createTRPCRouter({
 
   // * Delete a list
   deleteList: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), authorId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.authorId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Only the list author can delete the list.',
+        });
+      }
+
       try {
         return await ctx.prisma.list.delete({
           where: {
@@ -128,8 +135,7 @@ export const listRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        console.log(`Task not found: ${id}`);
-        return null;
+        return error;
       }
     }),
 
@@ -179,6 +185,21 @@ export const listRouter = createTRPCRouter({
   updateTask: protectedProcedure
     .input(updateTaskSchema)
     .mutation(async ({ ctx, input }) => {
+      if (
+        // You are not the creator
+        input.authorId !== ctx.session.user.id &&
+        // You are not the assignee of a claimed task
+        input.claimed === true &&
+        input.assigneeId !== ctx.session.user.id
+      ) {
+        const message =
+          'Only the task creator or task assignee can update the task.';
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message,
+        });
+      }
+
       try {
         const data = {
           title: input.title,
@@ -217,10 +238,16 @@ export const listRouter = createTRPCRouter({
 
   // * Delete a task
   deleteTask: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), authorId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.authorId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Only the task author can delete the task.',
+        });
+      }
+
       try {
-        console.log('!!!!!!!!!!!!!!!');
         return await ctx.prisma.task.delete({
           where: {
             id: input.id,
@@ -251,7 +278,7 @@ export const listRouter = createTRPCRouter({
     }
   }),
 
-  // * Get all tasks claimed by a user in other user's lists
+  // * Get all tasks claimed by a user
   getDashboardTasks: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     try {
@@ -259,9 +286,6 @@ export const listRouter = createTRPCRouter({
         where: {
           claimed: true,
           assigneeId: userId,
-          NOT: {
-            authorId: userId,
-          },
         },
         orderBy: [
           {

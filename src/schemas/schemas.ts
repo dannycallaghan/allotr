@@ -8,7 +8,7 @@ export const createListSchema = z.object({
     .trim(),
   description: z
     .string()
-    .max(1024, { message: 'Maximum length is 500 characters.' })
+    .max(500, { message: 'Maximum length is 500 characters.' })
     .trim(),
 });
 
@@ -21,8 +21,9 @@ export const updateListDetailsSchema = z.object({
     .trim(),
   description: z
     .string()
-    .max(1024, { message: 'Maximum length is 1024 characters.' })
+    .max(500, { message: 'Maximum length is 500 characters.' })
     .trim(),
+  authorId: z.string().trim(),
 });
 
 export const createTaskSchema = z.object({
@@ -82,6 +83,8 @@ export const updateTaskSchema = z.object({
     .nullable(),
   claimed: z.boolean().default(false),
   priority: z.number().default(3),
+  authorId: z.string().trim(),
+  assigneeId: z.string().trim().nullable(),
 });
 
 // id         String   @id @default(auto()) @map("_id") @db.ObjectId

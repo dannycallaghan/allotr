@@ -175,6 +175,8 @@ const TaskForm = (props: IProps) => {
         assignee: task.assignee,
         user: task.user,
         priority: task.priority,
+        authorId: task.authorId,
+        assigneeId: task.assigneeId,
       }));
       setMode('edit');
     }
