@@ -67,11 +67,9 @@ const DeleteTaskButton = (props: IProps) => {
       <AuthAction
         type="button"
         href={`/${data.listId}/${data.id}`}
-        match={[data?.authorId].concat(
-          data.claimed ? [data?.assignee?.id] : [],
-        )}
+        match={[data?.authorId]}
         onClick={handleRemove}
-        classes={`btn ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
+        classes={`btn mb-2 ${deleteCount === 0 ? 'btn-error' : 'btn-warning'}`}
       >
         <span className="pr-2 text-lg">
           {deleteCount === 0 ? <FiTrash2 /> : <FiAlertTriangle />}

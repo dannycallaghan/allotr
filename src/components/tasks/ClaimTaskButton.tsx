@@ -39,11 +39,42 @@ const ClaimTaskButton = (props: IProps) => {
     return;
   };
 
-  if (data.claimed && data?.assignee?.id !== session?.user?.id) {
+  // task is claimed, you are not the assignee and you are not the creator
+  if (
+    data.claimed &&
+    data?.assignee?.id !== session?.user?.id &&
+    data?.authorId !== session?.user?.id
+  ) {
+    // return nothing
     return null;
   }
 
+  // task is claimed, you are not the assignee BUT you are the creator
+  if (
+    data.claimed &&
+    data?.assignee?.id !== session?.user?.id &&
+    data?.authorId === session?.user?.id
+  ) {
+    // return remove claim
+    return (
+      <>
+        <button
+          type="button"
+          onClick={handleClaim}
+          className="btn mb-2 border-pink-100 bg-pink-100 text-black hover:border-pink-200 hover:bg-pink-200"
+        >
+          <span className="pr-2 text-lg">
+            <FiToggleRight />
+          </span>
+          Remove claim
+        </button>
+      </>
+    );
+  }
+
+  // task is claimed, you are not the assignee
   if (data.claimed && data?.assignee?.id === session?.user?.id) {
+    // return unclaim
     return (
       <>
         <button
@@ -60,6 +91,9 @@ const ClaimTaskButton = (props: IProps) => {
     );
   }
 
+  // task is not claimed
+
+  // return claim task
   return (
     <>
       <button

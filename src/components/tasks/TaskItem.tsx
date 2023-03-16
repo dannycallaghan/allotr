@@ -9,6 +9,7 @@ import TaskPriority from './TaskPriority';
 import { FiCheckSquare } from 'react-icons/fi';
 import ClaimTaskButton from './ClaimTaskButton';
 import Overdue from './Overdue';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   data: Task;
@@ -19,6 +20,7 @@ interface IProps {
 const TaskItem = (props: IProps) => {
   const { data, remove, claim } = props;
   const [completed, setCompleted] = useState<boolean>(data.isComplete);
+  const { data: session } = useSession();
 
   const handleToggleStatus = (state: boolean) => {
     setCompleted(state);
@@ -29,6 +31,16 @@ const TaskItem = (props: IProps) => {
       setCompleted(data.isComplete);
     }
   }, [data]);
+
+  const ViewOrEdit = () => {
+    if (data.claimed && data?.assignee?.id === session?.user?.id) {
+      return 'Edit Task';
+    }
+    if (data.authorId === session?.user?.id) {
+      return 'Edit Task';
+    }
+    return 'View Task';
+  };
 
   return (
     <>
@@ -59,7 +71,7 @@ const TaskItem = (props: IProps) => {
               </label>
               <div
                 tabIndex={0}
-                className="dropdown-content menu rounded-box w-52 border bg-base-100 p-2 shadow"
+                className="dropdown-content menu rounded-box w-52 border bg-base-100 p-2  pb-0 shadow"
               >
                 <Link
                   href={`/${data.listId}/${data.id}`}
@@ -69,7 +81,7 @@ const TaskItem = (props: IProps) => {
                   <span className="pr-2 text-lg">
                     <FiCheckSquare />
                   </span>
-                  View task
+                  <ViewOrEdit />
                 </Link>
                 <ClaimTaskButton data={data} claim={claim} />
                 <DeleteTaskButton data={data} remove={remove} />

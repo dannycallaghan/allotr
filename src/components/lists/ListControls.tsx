@@ -1,6 +1,6 @@
 import { FiTrash2, FiEdit, FiShare2 } from 'react-icons/fi';
 import ModalDeleteList from '../modals/ModalDeleteList';
-import ModalShareList from '../modals/ModalShareList';
+import ModalShareItem from '../modals/ModalShareItem';
 import AuthAction from '../shared/AuthAction';
 
 interface IProps {
@@ -26,7 +26,7 @@ const ListControls = (props: IProps) => {
           Delete list
         </AuthAction>
         <label
-          htmlFor="modal-share-list"
+          htmlFor="modal-share-item"
           className="btn-accent btn-sm btn leading-like-btn-sm"
         >
           <span className="pr-2 text-lg">
@@ -47,7 +47,7 @@ const ListControls = (props: IProps) => {
         </AuthAction>
       </div>
       <ModalDeleteList listId={listId} listOwner={listOwner} />
-      <ModalShareList path={path} />
+      <ModalShareItem type="list" path={path} />
     </>
   );
 };
