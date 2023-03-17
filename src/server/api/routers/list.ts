@@ -185,19 +185,20 @@ export const listRouter = createTRPCRouter({
   updateTask: protectedProcedure
     .input(updateTaskSchema)
     .mutation(async ({ ctx, input }) => {
-      if (
-        // You are not the creator
-        input.authorId !== ctx.session.user.id &&
-        // You are not the assignee of a claimed task
-        input.claimed === true &&
-        input.assigneeId !== ctx.session.user.id
-      ) {
-        const message =
-          'Only the task creator or task assignee can update the task.';
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message,
-        });
+      // if the task is claimed
+      if (input.claimed) {
+        // if the task is not claimed by the user and the user isn't the author
+        if (
+          input.assigneeId !== ctx.session.user.id &&
+          input.authorId !== ctx.session.user.id
+        ) {
+          const message =
+            'Only the task creator or task assignee can update the task.';
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message,
+          });
+        }
       }
 
       try {
