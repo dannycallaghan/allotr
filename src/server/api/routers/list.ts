@@ -185,8 +185,9 @@ export const listRouter = createTRPCRouter({
   updateTask: protectedProcedure
     .input(updateTaskSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log(input.claimed, input.assigneeId, ctx.session.user.id);
       // if the task is claimed
-      if (input.claimed) {
+      if (input.claimed && input.assigneeId) {
         // if the task is not claimed by the user and the user isn't the author
         if (
           input.assigneeId !== ctx.session.user.id &&
