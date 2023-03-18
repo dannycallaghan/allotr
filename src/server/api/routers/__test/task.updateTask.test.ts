@@ -10,7 +10,7 @@ test('updateTask: Unauthenticated user should throw UNAUTHORIZED error', async (
   const caller = appRouter.createCaller({ session: null, prisma: prisma });
 
   try {
-    await caller.list.updateTask(mockTaskUpdateInput);
+    await caller.task.updateTask(mockTaskUpdateInput);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
@@ -29,7 +29,7 @@ test('updateTask: User who is not a creator or assignee of a claimed task should
   };
 
   try {
-    await caller.list.updateTask(input);
+    await caller.task.updateTask(input);
   } catch (error) {
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
     expect(error).toHaveProperty(
@@ -51,7 +51,7 @@ test('updateTask: User who is not a creator or assignee of a claimed task should
   };
 
   try {
-    await caller.list.updateTask(input);
+    await caller.task.updateTask(input);
   } catch (error) {
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
     expect(error).toHaveProperty(
@@ -74,7 +74,7 @@ test('updateTask: User who is not a creator or assignee of a claimed task should
   };
 
   try {
-    await caller.list.updateTask(input);
+    await caller.task.updateTask(input);
   } catch (error) {
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
     expect(error).toHaveProperty(
@@ -112,7 +112,7 @@ test('updateTask: Task creator can update task', async () => {
     prisma: prismaMock,
   });
 
-  const result = await caller.list.updateTask(input);
+  const result = await caller.task.updateTask(input);
 
   expect(result).toStrictEqual(output);
 });
@@ -146,7 +146,7 @@ test('updateTask: Assignee of a claimed task can update task', async () => {
     prisma: prismaMock,
   });
 
-  const result = await caller.list.updateTask(input);
+  const result = await caller.task.updateTask(input);
 
   expect(result).toStrictEqual(output);
 });

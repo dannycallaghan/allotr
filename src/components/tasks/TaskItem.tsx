@@ -32,7 +32,7 @@ const TaskItem = (props: IProps) => {
     }
   }, [data]);
 
-  const ViewOrEdit = () => {
+  const viewOrEdit = () => {
     if (data.claimed && data?.assignee?.id === session?.user?.id) {
       return 'Edit Task';
     }
@@ -81,7 +81,7 @@ const TaskItem = (props: IProps) => {
                   <span className="pr-2 text-lg">
                     <FiCheckSquare />
                   </span>
-                  <ViewOrEdit />
+                  {viewOrEdit()}
                 </Link>
                 <ClaimTaskButton data={data} claim={claim} />
                 <DeleteTaskButton data={data} remove={remove} />

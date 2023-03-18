@@ -13,7 +13,7 @@ interface IProps {
 const DeleteTaskButton = (props: IProps) => {
   const { remove, data } = props;
   const [deleteCount, setDeleteCount] = useState<number>(0);
-  const deleteMutation = api.list.deleteTask.useMutation({
+  const deleteMutation = api.task.deleteTask.useMutation({
     onError: (error: unknown) => {
       toast.error('Well, this is embarrassing.');
       console.error('Cound not delete task', error);

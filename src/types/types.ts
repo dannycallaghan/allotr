@@ -44,6 +44,7 @@ export type Task = {
   claimed: boolean;
   assignee?: User | null;
   priority: number;
+  assigneeId?: string | null;
 };
 
 export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;

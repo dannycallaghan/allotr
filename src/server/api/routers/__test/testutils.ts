@@ -71,7 +71,7 @@ export const mockTaskOutput: Task = {
 };
 
 export type CreateTaskInput = inferProcedureInput<
-  AppRouter['list']['createTask']
+  AppRouter['task']['createTask']
 >;
 
 export const mockTaskInput: CreateTaskInput = {
@@ -85,7 +85,7 @@ export const mockTaskInput: CreateTaskInput = {
 };
 
 export type UpdateTaskInput = inferProcedureInput<
-  AppRouter['list']['updateTask']
+  AppRouter['task']['updateTask']
 >;
 
 export const mockTaskUpdateInput: UpdateTaskInput = {
@@ -102,4 +102,15 @@ export const mockTaskUpdateInput: UpdateTaskInput = {
   claimed: false,
   isComplete: false,
   priority: 0,
+};
+
+export type UpdateTaskClaimStatusInput = inferProcedureInput<
+  AppRouter['task']['updateTaskClaimStatus']
+>;
+
+export const updateTaskClaimStatusInput: UpdateTaskClaimStatusInput = {
+  id: '123',
+  claimed: false,
+  authorId: '',
+  assigneeId: null,
 };

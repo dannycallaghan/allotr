@@ -15,7 +15,7 @@ const Task = () => {
   const taskId = routeData.task || '1';
   const listId = routeData.list || '1';
   const [path, setPath] = useState<string>('');
-  const { data, isLoading } = api.list.getTaskById.useQuery(
+  const { data, isLoading } = api.task.getTaskById.useQuery(
     {
       id: taskId as string,
     },

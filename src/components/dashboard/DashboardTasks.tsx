@@ -14,7 +14,7 @@ const DashboardTasks = () => {
     data: tasksData,
     isLoading: tasksIsLoading,
     error,
-  } = api.list.getDashboardTasks.useQuery();
+  } = api.task.getDashboardTasks.useQuery();
 
   if (error) {
     return (

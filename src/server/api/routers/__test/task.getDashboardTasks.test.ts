@@ -8,7 +8,7 @@ test('getDashboardTasks: Unauthenticated user should throw UNAUTHORIZED error', 
   const caller = appRouter.createCaller({ session: null, prisma: prisma });
 
   try {
-    await caller.list.getDashboardTasks();
+    await caller.task.getDashboardTasks();
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
@@ -21,7 +21,7 @@ test('getDashboardTasks: Fake user should return an empty array of tasks', async
     prisma: prisma,
   });
 
-  const result = await caller.list.getDashboardTasks();
+  const result = await caller.task.getDashboardTasks();
 
   expect(result).toHaveLength(0);
 });
@@ -32,7 +32,7 @@ test('getDashboardTasks: Test user should return an array of tasks claimed by te
     prisma: prisma,
   });
 
-  const result = await caller.list.getDashboardTasks();
+  const result = await caller.task.getDashboardTasks();
 
   expect(result).not.toHaveLength(0);
 

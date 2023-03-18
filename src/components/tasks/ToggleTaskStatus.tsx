@@ -14,7 +14,7 @@ const ToggleTaskStatus = (props: IProps) => {
   const { data, toggleStatus, completed } = props;
   const { data: sessionData } = useSession();
 
-  const editMutation = api.list.updateTask.useMutation({
+  const editMutation = api.task.updateTask.useMutation({
     onSuccess: () => {
       toast.success('Task updated!');
       toggleStatus(!completed);

@@ -10,7 +10,7 @@ import { mockTaskOutput, testTaskId } from './testutils';
 test('getTaskById: Unknown task ID should return null', async () => {
   const caller = appRouter.createCaller({ session: null, prisma: prisma });
 
-  type Input = inferProcedureInput<AppRouter['list']['getTaskById']>;
+  type Input = inferProcedureInput<AppRouter['task']['getTaskById']>;
 
   const id = '123';
 
@@ -18,7 +18,7 @@ test('getTaskById: Unknown task ID should return null', async () => {
     id,
   };
 
-  const result = await caller.list.getTaskById(input);
+  const result = await caller.task.getTaskById(input);
 
   expect(result).toBeNull();
 });
@@ -32,7 +32,7 @@ test('getTaskById: Correct list ID should return task details', async () => {
 
   const caller = appRouter.createCaller({ session: null, prisma: prismaMock });
 
-  type Input = inferProcedureInput<AppRouter['list']['getTaskById']>;
+  type Input = inferProcedureInput<AppRouter['task']['getTaskById']>;
 
   const id = mockOutput.id;
 
@@ -40,7 +40,7 @@ test('getTaskById: Correct list ID should return task details', async () => {
     id,
   };
 
-  const result = await caller.list.getTaskById(input);
+  const result = await caller.task.getTaskById(input);
 
   expect(result).toStrictEqual(mockOutput);
 });
@@ -48,7 +48,7 @@ test('getTaskById: Correct list ID should return task details', async () => {
 test('getTaskById: Task details should include author details', async () => {
   const caller = appRouter.createCaller({ session: null, prisma: prisma });
 
-  type Input = inferProcedureInput<AppRouter['list']['getTaskById']>;
+  type Input = inferProcedureInput<AppRouter['task']['getTaskById']>;
 
   const id = testTaskId;
 
@@ -56,7 +56,7 @@ test('getTaskById: Task details should include author details', async () => {
     id,
   };
 
-  const result = await caller.list.getTaskById(input);
+  const result = await caller.task.getTaskById(input);
 
   expect(result).toHaveProperty('user');
 });

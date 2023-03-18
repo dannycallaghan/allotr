@@ -16,7 +16,7 @@ import { mockDeep } from 'jest-mock-extended';
 test('createTask: Unauthenticated user should throw UNAUTHORIZED error', async () => {
   const caller = appRouter.createCaller({ session: null, prisma: prisma });
 
-  type Input = inferProcedureInput<AppRouter['list']['createTask']>;
+  type Input = inferProcedureInput<AppRouter['task']['createTask']>;
 
   const input: Input = {
     title: 'Test list',
@@ -29,7 +29,7 @@ test('createTask: Unauthenticated user should throw UNAUTHORIZED error', async (
   };
 
   try {
-    await caller.list.createTask(input);
+    await caller.task.createTask(input);
   } catch (error) {
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
   }
@@ -45,7 +45,7 @@ test('createTask: Authenticated user can create task and have task ID returned',
     prisma: prismaMock,
   });
 
-  const result = await caller.list.createTask(mockTaskInput);
+  const result = await caller.task.createTask(mockTaskInput);
 
   expect(result).toStrictEqual(mockTaskOutput);
 });
@@ -71,7 +71,7 @@ test('createTask: Task title must be 6 characters or more', async () => {
   };
 
   try {
-    await caller.list.createTask(input);
+    await caller.task.createTask(input);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'BAD_REQUEST');
@@ -99,7 +99,7 @@ test('createTask: Task title must be less than 256 characters', async () => {
   };
 
   try {
-    await caller.list.createTask(input);
+    await caller.task.createTask(input);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'BAD_REQUEST');
@@ -127,7 +127,7 @@ test('createTask: Task description must be less than 1024 characters', async () 
   };
 
   try {
-    await caller.list.createTask(input);
+    await caller.task.createTask(input);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'BAD_REQUEST');
@@ -155,7 +155,7 @@ test('createTask: Task comment must be less than 1024 characters', async () => {
   };
 
   try {
-    await caller.list.createTask(input);
+    await caller.task.createTask(input);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'BAD_REQUEST');

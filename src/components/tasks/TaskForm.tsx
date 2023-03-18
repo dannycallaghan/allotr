@@ -40,7 +40,7 @@ const TaskForm = (props: IProps) => {
   };
   const [taskData, setTaskData] = useState<Task>(initialTaskData);
 
-  const createMutation = api.list.createTask.useMutation({
+  const createMutation = api.task.createTask.useMutation({
     onSuccess: () => {
       router.push(`/${listId}`);
       toast.success('New task added!');
@@ -50,13 +50,23 @@ const TaskForm = (props: IProps) => {
     },
   });
 
-  const editMutation = api.list.updateTask.useMutation({
+  const editMutation = api.task.updateTask.useMutation({
     onSuccess: () => {
       router.push(`/${listId}`);
       toast.success('Task updated!');
     },
     onError: (error) => {
       console.error('Could not edit task:', error);
+    },
+  });
+
+  const claimMutation = api.task.updateTaskClaimStatus.useMutation({
+    onSuccess: () => {
+      router.push(`/${listId}`);
+      toast.success('Task claim updated!');
+    },
+    onError: (error) => {
+      console.error('Could not update claim status:', error);
     },
   });
 
@@ -80,7 +90,9 @@ const TaskForm = (props: IProps) => {
     if (task) {
       editMutation.mutate({
         ...taskData,
+        authorId: taskData.authorId as string,
         id: task.id as string,
+        assigneeId: null,
       });
       return;
     }
@@ -120,10 +132,11 @@ const TaskForm = (props: IProps) => {
 
   const handleClaimTask = (persist = false) => {
     if (persist && task) {
-      editMutation.mutate({
-        ...taskData,
+      claimMutation.mutate({
         id: task.id as string,
         claimed: false,
+        assigneeId: task.assigneeId as string,
+        authorId: task.authorId as string,
       });
       return;
     }
@@ -313,7 +326,9 @@ const TaskForm = (props: IProps) => {
         </>
       )}
 
-      {(createMutation.isError || editMutation.isError) && (
+      {(createMutation.isError ||
+        editMutation.isError ||
+        claimMutation.isError) && (
         <Alert type="error">
           Well, this is embarrassing. I&apos;m afraid something has gone wrong.
           It&apos;s us, not you. Try again in a minute?
@@ -552,7 +567,9 @@ const TaskForm = (props: IProps) => {
               </button>
               <button
                 className={`btn-primary btn ${
-                  createMutation.isLoading || editMutation.isLoading
+                  createMutation.isLoading ||
+                  editMutation.isLoading ||
+                  claimMutation.isLoading
                     ? 'loading'
                     : ''
                 }`}

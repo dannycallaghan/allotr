@@ -12,7 +12,7 @@ interface IProps {
 const ClaimTaskButton = (props: IProps) => {
   const { data, claim } = props;
   const { data: session } = useSession();
-  const editMutation = api.list.updateTask.useMutation({
+  const editMutation = api.task.updateTaskClaimStatus.useMutation({
     onError: (error: unknown) => {
       toast.error('Well, this is embarrassing.');
       console.error('Cound not claim task', error);
@@ -35,7 +35,12 @@ const ClaimTaskButton = (props: IProps) => {
       // @ts-ignore
       (task.assignee = { ...session.user }), (task.claimed = !task.claimed);
     }
-    editMutation.mutate(task);
+    editMutation.mutate({
+      id: task.id,
+      claimed: task.claimed,
+      authorId: task.authorId as string,
+      assigneeId: task.assignee?.id as string,
+    });
     return;
   };
 

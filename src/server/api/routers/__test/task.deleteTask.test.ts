@@ -11,7 +11,7 @@ test('deleteTask: Unauthenticated user should throw UNAUTHORIZED error', async (
   const input = { id: '123', authorId: '456' };
 
   try {
-    await caller.list.deleteTask(input);
+    await caller.task.deleteTask(input);
   } catch (error) {
     expect(error).toHaveProperty('name', 'TRPCError');
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
@@ -27,7 +27,7 @@ test('deleteTask: Only list creator can delete a list', async () => {
   const input = { id: '123', authorId: '456' };
 
   try {
-    await caller.list.deleteTask(input);
+    await caller.task.deleteTask(input);
   } catch (error) {
     expect(error).toHaveProperty('code', 'UNAUTHORIZED');
     expect(error).toHaveProperty(
@@ -69,7 +69,7 @@ test('deleteTask: List creator can delete a list', async () => {
     prisma: prismaMock,
   });
 
-  const result = await caller.list.deleteTask(input);
+  const result = await caller.task.deleteTask(input);
 
   expect(result).toStrictEqual(output);
 });

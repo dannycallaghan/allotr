@@ -87,12 +87,9 @@ export const updateTaskSchema = z.object({
   assigneeId: z.string().trim().nullable(),
 });
 
-// id         String   @id @default(auto()) @map("_id") @db.ObjectId
-//   title      String
-//   createdAt  DateTime @default(now())
-//   updatedAt  DateTime @updatedAt
-//   isComplete Boolean
-//   list       List     @relation(fields: [listId], references: [id])
-//   listId     String   @db.ObjectId
-//   user       User     @relation(fields: [authorId], references: [id])
-//   authorId   String
+export const updateTaskClaimStatusSchema = z.object({
+  id: z.string().trim(),
+  claimed: z.boolean().default(false),
+  authorId: z.string().trim(),
+  assigneeId: z.string().trim().nullable(),
+});
