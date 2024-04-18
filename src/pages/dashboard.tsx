@@ -1,11 +1,24 @@
 import type { NextPage } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import DashboardLists from '../components/dashboard/DashboardLists';
 import DashboardTasks from '../components/dashboard/DashboardTasks';
 import MainLayout from '../components/shared/MainLayout';
+import { useRouter } from 'next/router';
+import type { Session } from 'next-auth';
+
+function useClientSession(session: Session | null) {
+  const router = useRouter();
+  if (!session) {
+    const callback = `callbackUrl=${window.location.href}`;
+    router.push(`/signin?${callback}`);
+  }
+}
 
 const Dashboard: NextPage = () => {
+  const { data: session } = useSession();
+  useClientSession(session);
+
   return (
     <>
       <MainLayout classes="items-start" hero={false}>
@@ -33,27 +46,5 @@ const Dashboard: NextPage = () => {
     </>
   );
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-
-  if (!session) {
-    let callback = '';
-    if (context && context.resolvedUrl) {
-      callback = `callbackUrl=${context.resolvedUrl}`;
-    }
-    return {
-      redirect: {
-        destination: `/signin?${callback}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}
 
 export default Dashboard;
