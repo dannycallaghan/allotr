@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import MainLayout from '../components/shared/MainLayout';
 import PageSpinner from '../components/shared/PageSpinner';
-import useClientSession from '../hooks/useClientSession';
+import type { GetServerSidePropsContext } from 'next';
+import { authOptions } from './api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 const Signin = () => {
-  const { data: session } = useSession();
-  useClientSession(session);
-
   const router = useRouter();
   const { callbackUrl } = router.query;
 
@@ -25,5 +24,22 @@ const Signin = () => {
     </MainLayout>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    return {
+      props: { session },
+    };
+  }
+
+  return {
+    redirect: {
+      destination: '/',
+      permanent: false,
+    },
+  };
+}
 
 export default Signin;

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiShare2 } from 'react-icons/fi';
@@ -8,12 +7,11 @@ import PageSpinner from '../../components/shared/PageSpinner';
 import TaskForm from '../../components/tasks/TaskForm';
 import { api } from '../../utils/api';
 import ModalShareItem from '../../components/modals/ModalShareItem';
-import useClientSession from '../../hooks/useClientSession';
+import type { GetServerSidePropsContext } from 'next';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 const Task = () => {
-  const { data: session } = useSession();
-  useClientSession(session);
-
   const router = useRouter();
   const routeData = router.query;
   const taskId = routeData.task || '1';
@@ -96,5 +94,26 @@ const Task = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/auth/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default Task;

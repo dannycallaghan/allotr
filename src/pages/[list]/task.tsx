@@ -1,15 +1,12 @@
-import type { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import MainLayout from '../../components/shared/MainLayout';
 import TaskForm from '../../components/tasks/TaskForm';
-import useClientSession from '../../hooks/useClientSession';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const CreateTask: NextPage = () => {
-  const { data: session } = useSession();
-  useClientSession(session);
-
   const router = useRouter();
   const { listTitle, list } = router.query;
 
@@ -42,3 +39,24 @@ const CreateTask: NextPage = () => {
 };
 
 export default CreateTask;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/auth/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}

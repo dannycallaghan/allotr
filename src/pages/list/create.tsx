@@ -6,7 +6,6 @@ import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
 import ModalListCreated from '../../components/modals/ModalListCreated';
-import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 
@@ -180,7 +179,6 @@ const CreatePage: NextPage = () => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 

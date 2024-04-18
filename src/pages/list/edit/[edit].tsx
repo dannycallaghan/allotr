@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { NextPage } from 'next';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import MainLayout from '../../../components/shared/MainLayout';
 import PageSpinner from '../../../components/shared/PageSpinner';
 import Alert from '../../../components/shared/Alert';
@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { api } from '../../../utils/api';
 import ModalListCreated from '../../../components/modals/ModalListCreated';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import useClientSession from '../../../hooks/useClientSession';
+import { authOptions } from '../../api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 const initialListData: () => UpdateListDetailsInput = () => {
   return {
@@ -21,9 +21,6 @@ const initialListData: () => UpdateListDetailsInput = () => {
 };
 
 const EditPage: NextPage = () => {
-  const { data: session } = useSession();
-  useClientSession(session);
-
   const router = useRouter();
   const routeData = router.query;
   const listId = routeData.edit;
@@ -242,5 +239,26 @@ const EditPage: NextPage = () => {
 
   return null;
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/auth/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default EditPage;

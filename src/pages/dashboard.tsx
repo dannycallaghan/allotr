@@ -1,15 +1,12 @@
-import type { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
 import DashboardLists from '../components/dashboard/DashboardLists';
 import DashboardTasks from '../components/dashboard/DashboardTasks';
 import MainLayout from '../components/shared/MainLayout';
-import useClientSession from '../hooks/useClientSession';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './api/auth/[...nextauth]';
 
 const Dashboard: NextPage = () => {
-  const { data: session } = useSession();
-  useClientSession(session);
-
   return (
     <>
       <MainLayout classes="items-start" hero={false}>
@@ -37,5 +34,26 @@ const Dashboard: NextPage = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    let callback = '';
+    if (context && context.resolvedUrl) {
+      callback = `callbackUrl=${context.resolvedUrl}`;
+    }
+    return {
+      redirect: {
+        destination: `/signin?${callback}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default Dashboard;
