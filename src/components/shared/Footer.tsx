@@ -24,7 +24,7 @@ const Footer = () => {
     <footer className="bg-base-content pb-10 text-primary-content">
       <div className="container mx-auto my-0 flex justify-end py-4 px-2 md:px-16">
         <button
-          className="invisible btn-sm btn gap-2"
+          className="btn-sm btn invisible gap-2"
           type="button"
           onClick={() => scrollToSmoothly(0, 250)}
         >
@@ -38,7 +38,7 @@ const Footer = () => {
           <br />
           Task management for everybody else.
         </p>
-        <p>Copyright &copy; 2023 - All rights reserved</p>
+        <p>Copyright &copy; 2024 - All rights reserved</p>
       </div>
     </footer>
   );
