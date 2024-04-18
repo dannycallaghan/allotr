@@ -8,7 +8,7 @@ allotr proudly uses the T3 technology stack, and the following services:
 
 - Deployment and hosting through [Vercel](https://vercel.com/).
 - Images hosted and served via [Cloudinary](https://cloudinary.com/).
-- Database hosted at [Planetscale](https://planetscale.com/).
+- Database hosted at [Neon](https://neon.tech/).
 
 ## Try it yourself
 
@@ -23,7 +23,3 @@ You can visit and use allotr at [allotr.app](https://allotr.app).
 ![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360864/img5_levfvr.png 'allotr screen')
 ![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360048/img6_la4ewn.png 'allotr screen')
 ![allotr screen](https://res.cloudinary.com/dvifrhpvo/image/upload/v1678360930/img7_a9mvgq.png 'allotr screen')
-
-## About
-
-Developed by Danny Callaghan for CM3070 Final Project, during his BSc Computer Science degree at the University of London.
