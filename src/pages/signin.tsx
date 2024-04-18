@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
-import { getSession, signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import MainLayout from '../components/shared/MainLayout';
 import PageSpinner from '../components/shared/PageSpinner';
+import useClientSession from '../hooks/useClientSession';
 
 const Signin = () => {
+  const { data: session } = useSession();
+  useClientSession(session);
+
   const router = useRouter();
   const { callbackUrl } = router.query;
 
@@ -21,23 +25,5 @@ const Signin = () => {
     </MainLayout>
   );
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      props: { session },
-    };
-  }
-
-  return {
-    redirect: {
-      destination: '/',
-      permanent: false,
-    },
-  };
-}
 
 export default Signin;

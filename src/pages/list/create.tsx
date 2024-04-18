@@ -6,7 +6,8 @@ import type { CreateListInput } from '../../types/types';
 import Link from 'next/link';
 import { api } from '../../utils/api';
 import ModalListCreated from '../../components/modals/ModalListCreated';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import useClientSession from '../../hooks/useClientSession';
 
 const initialListData: () => CreateListInput = () => {
   return {
@@ -16,6 +17,9 @@ const initialListData: () => CreateListInput = () => {
 };
 
 const CreatePage: NextPage = () => {
+  const { data: session } = useSession();
+  useClientSession(session);
+
   const [listData, setListData] = useState<CreateListInput>(initialListData);
   const [listId, setlistId] = useState<string>('');
   const createMutation = api.list.createList.useMutation({
@@ -177,27 +181,5 @@ const CreatePage: NextPage = () => {
     </>
   );
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-
-  if (!session) {
-    let callback = '';
-    if (context && context.resolvedUrl) {
-      callback = `callbackUrl=${context.resolvedUrl}`;
-    }
-    return {
-      redirect: {
-        destination: `/auth/signin?${callback}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}
 
 export default CreatePage;

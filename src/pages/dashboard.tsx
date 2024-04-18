@@ -4,19 +4,7 @@ import Link from 'next/link';
 import DashboardLists from '../components/dashboard/DashboardLists';
 import DashboardTasks from '../components/dashboard/DashboardTasks';
 import MainLayout from '../components/shared/MainLayout';
-import { useRouter } from 'next/router';
-import type { Session } from 'next-auth';
-import { useEffect } from 'react';
-
-function useClientSession(session: Session | null) {
-  const router = useRouter();
-  useEffect(() => {
-    if (!session) {
-      const callback = `callbackUrl=${window.location.href}`;
-      router.push(`/signin?${callback}`);
-    }
-  });
-}
+import useClientSession from '../hooks/useClientSession';
 
 const Dashboard: NextPage = () => {
   const { data: session } = useSession();

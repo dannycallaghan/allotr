@@ -1,11 +1,15 @@
 import type { NextPage } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import MainLayout from '../../components/shared/MainLayout';
 import TaskForm from '../../components/tasks/TaskForm';
+import useClientSession from '../../hooks/useClientSession';
 
 const CreateTask: NextPage = () => {
+  const { data: session } = useSession();
+  useClientSession(session);
+
   const router = useRouter();
   const { listTitle, list } = router.query;
 
@@ -38,25 +42,3 @@ const CreateTask: NextPage = () => {
 };
 
 export default CreateTask;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-
-  if (!session) {
-    let callback = '';
-    if (context && context.resolvedUrl) {
-      callback = `callbackUrl=${context.resolvedUrl}`;
-    }
-    return {
-      redirect: {
-        destination: `/auth/signin?${callback}`,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}
